@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<style>
+		html{margin: 0; padding: 0; font-family: 'Courier New', Courier, monospace; font-size: 12px;}
+		p{margin: 0; padding: 0;}
+		#note-content{position: absolute;top: 10px;left: 10px;right: 10px;bottom: 10px;}
+	</style>
+</head>
+<body>
+	<div id="note-content" contenteditable="true"></div>
+	<script type="text/javascript">
+		var content_length = 0;
+		/*
+		* 设置DIV的内容
+		*/
+		function js_set_content(data)
+		{
+			var ele = document.getElementById("note-content");
+			ele.innerHTML = data;
+			// 初始化设置内容时，默认不设置脏
+			content_length = data.length;
+		}
+		/*
+		* 获取DIV的内容
+		*/
+		function js_get_content()
+		{
+			var ele = document.getElementById("note-content");
+			return ele.innerHTML;
+		}
+		/*
+		* 判断DIV的内容是否改变
+		*/
+		function js_is_content_change()
+		{
+			var ele = document.getElementById("note-content");
+			var b = ele.innerHTML.length != content_length;
+			return b;
+		}
+		/*
+		* 更新当前内容
+		*/
+		function js_up_content_sise()
+		{
+			var ele = document.getElementById("note-content");
+			content_length = ele.innerHTML.length;
+		}
+	</script>
+</body>
+</html>
+<!-- 笔记页面模板 -->
