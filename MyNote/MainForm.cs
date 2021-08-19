@@ -286,7 +286,16 @@ namespace MyNote
 		
 		void OnFindInAll(object sender, EventArgs e)
 		{
-	
+			string text = mToolSearchInput.Text;
+			if(text.Length < 1)
+			{
+				return;
+			}
+			List<NoteBookNode> result = new List<NoteBookNode>();
+			mNoteTree.FindNodesWithContent(text, ref result);
+			mFindResultDlg.SetResultList(result);
+			mFindResultDlg.Show();
+			mFindResultDlg.Focus();
 		}
 
 		void OnSelectTreeViewNode(string nodeName, string uid)

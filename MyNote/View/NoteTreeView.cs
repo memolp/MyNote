@@ -10,6 +10,7 @@ using System;
 using System.IO;
 using System.ComponentModel;
 using System.Drawing;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using System.Collections.Generic;
 using MyNote.Data;
@@ -138,6 +139,72 @@ namespace MyNote.View
 					result.Add(element);
 				}
 			}
+		}
+		/// <summary>
+		/// 获取全部包含文本的节点或者内容的节点
+		/// </summary>
+		/// <param name="text"></param>
+		/// <param name="result"></param>
+		public void FindNodesWithContent(string text, ref List<NoteBookNode> result)
+		{
+			// 拿到节点的根路径，方便删除全部的节点文件
+			string root_path;
+			string book_name;
+			if(!GetCurrentNoteBookPath(out root_path, out book_name))
+			{
+				return;
+			}
+			string fileRootpath = Path.Combine(root_path, book_name);
+			string filename;
+			string content;
+			
+			foreach (var element in mNoteNodes.Values) 
+			{	
+				//如果节点里面已经有了，就不打开文件了
+				if(element.NodeName.IndexOf(text) >= 0) 
+				{
+					result.Add(element);
+				}else
+				{
+					filename = Path.Combine(fileRootpath, element.FileName);
+					if(!File.Exists(filename))
+					{
+						continue;
+					}
+					content = HtmlToPlainText(File.ReadAllText(filename));
+					if(content.Contains(text))
+					{
+						result.Add(element);
+					}
+				}
+			}
+		}
+		/// <summary>
+		/// 目前不知性能如何
+		/// https://stackoverflow.com/questions/286813/how-do-you-convert-html-to-plain-text
+		/// </summary>
+		/// <param name="html"></param>
+		/// <returns></returns>
+		private static string HtmlToPlainText(string html)
+		{
+		    const string tagWhiteSpace = @"(>|$)(\W|\n|\r)+<";//matches one or more (white space or line breaks) between '>' and '<'
+		    const string stripFormatting = @"<[^>]*(>|$)";//match any character between '<' and '>', even when end tag is missing
+		    const string lineBreak = @"<(br|BR)\s{0,1}\/{0,1}>";//matches: <br>,<br/>,<br />,<BR>,<BR/>,<BR />
+		    var lineBreakRegex = new Regex(lineBreak, RegexOptions.Multiline);
+		    var stripFormattingRegex = new Regex(stripFormatting, RegexOptions.Multiline);
+		    var tagWhiteSpaceRegex = new Regex(tagWhiteSpace, RegexOptions.Multiline);
+		
+		    var text = html;
+		    //Decode html specific characters
+		    text = System.Net.WebUtility.HtmlDecode(text); 
+		    //Remove tag whitespace/line breaks
+		    text = tagWhiteSpaceRegex.Replace(text, "><");
+		    //Replace <br /> with line breaks
+		    text = lineBreakRegex.Replace(text, Environment.NewLine);
+		    //Strip formatting
+		    text = stripFormattingRegex.Replace(text, string.Empty);
+		
+		    return text;
 		}
 		/// <summary>
 		/// 选中并选中

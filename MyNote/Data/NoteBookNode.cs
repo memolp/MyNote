@@ -147,14 +147,33 @@ namespace MyNote.Data
 		/// <param name="root_path"></param>
 		public void Remove(string root_path)
 		{
-			string filename = string.Format("{0}{1}",NodeDocumentUID, Const.NOTE_BOOK_NODE_EXT);
-			string filepath = Path.Combine(root_path, filename);
+			string filepath = Path.Combine(root_path, this.FileName);
 			if(File.Exists(filepath))
 			{
 				File.Delete(filepath);
 			}
 			// 继续删除当前节点的子节点列表
 			this.RemoveAllChildren(root_path);
+		}
+		
+		/// <summary>
+		/// 记录文件名
+		/// </summary>
+		[NonSerialized]
+		string _filename = string.Empty;
+		/// <summary>
+		/// 获取当前文档的文件名
+		/// </summary>
+		public string FileName
+		{
+			get
+			{
+				if(string.IsNullOrEmpty(_filename))
+				{
+					_filename = string.Format("{0}{1}",NodeDocumentUID, Const.NOTE_BOOK_NODE_EXT);
+				}
+				return _filename;
+			}
 		}
 	}
 }
