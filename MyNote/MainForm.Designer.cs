@@ -32,6 +32,15 @@ namespace MyNote
 		private System.Windows.Forms.ToolStripButton mToolOpenNoteBook;
 		private System.Windows.Forms.ToolStripButton mToolSaveNote;
 		private System.Windows.Forms.ToolStripStatusLabel mStatusLabel;
+		private System.Windows.Forms.ContextMenuStrip mNotifyMenu;
+		private System.Windows.Forms.ToolStripMenuItem 显示窗体ToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem mTMQuitApp;
+		private System.Windows.Forms.NotifyIcon mNotifyIcon;
+		private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
+		private System.Windows.Forms.ToolStripTextBox mToolSearchInput;
+		private System.Windows.Forms.ToolStripSplitButton mToolSearch;
+		private System.Windows.Forms.ToolStripMenuItem 大纲查找ToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem 全部查找ToolStripMenuItem;
 		
 		/// <summary>
 		/// Disposes resources used by the form.
@@ -54,6 +63,7 @@ namespace MyNote
 		/// </summary>
 		private void InitializeComponent()
 		{
+			this.components = new System.ComponentModel.Container();
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
 			this.mStatusBar = new System.Windows.Forms.StatusStrip();
 			this.mStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
@@ -61,6 +71,11 @@ namespace MyNote
 			this.mToolCreateNoteBook = new System.Windows.Forms.ToolStripButton();
 			this.mToolOpenNoteBook = new System.Windows.Forms.ToolStripButton();
 			this.mToolSaveNote = new System.Windows.Forms.ToolStripButton();
+			this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
+			this.mToolSearchInput = new System.Windows.Forms.ToolStripTextBox();
+			this.mToolSearch = new System.Windows.Forms.ToolStripSplitButton();
+			this.大纲查找ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.全部查找ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.mSplitCtrl = new System.Windows.Forms.SplitContainer();
 			this.mNoteTree = new MyNote.View.NoteTreeView();
 			this.mNodeEditor = new MyNote.View.NoteEditor();
@@ -73,6 +88,10 @@ namespace MyNote
 			this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
 			this.mMenuExit = new System.Windows.Forms.ToolStripMenuItem();
 			this.editToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.mNotifyMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
+			this.显示窗体ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.mTMQuitApp = new System.Windows.Forms.ToolStripMenuItem();
+			this.mNotifyIcon = new System.Windows.Forms.NotifyIcon(this.components);
 			this.mStatusBar.SuspendLayout();
 			this.mToolBar.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.mSplitCtrl)).BeginInit();
@@ -80,6 +99,7 @@ namespace MyNote
 			this.mSplitCtrl.Panel2.SuspendLayout();
 			this.mSplitCtrl.SuspendLayout();
 			this.mSysMenu.SuspendLayout();
+			this.mNotifyMenu.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// mStatusBar
@@ -103,7 +123,10 @@ namespace MyNote
 			this.mToolBar.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
 			this.mToolCreateNoteBook,
 			this.mToolOpenNoteBook,
-			this.mToolSaveNote});
+			this.mToolSaveNote,
+			this.toolStripSeparator3,
+			this.mToolSearchInput,
+			this.mToolSearch});
 			this.mToolBar.Location = new System.Drawing.Point(0, 25);
 			this.mToolBar.Name = "mToolBar";
 			this.mToolBar.Size = new System.Drawing.Size(1024, 25);
@@ -139,6 +162,42 @@ namespace MyNote
 			this.mToolSaveNote.Size = new System.Drawing.Size(23, 22);
 			this.mToolSaveNote.Text = "保存笔记";
 			this.mToolSaveNote.Click += new System.EventHandler(this.OnSaveNoteBookDocument);
+			// 
+			// toolStripSeparator3
+			// 
+			this.toolStripSeparator3.Name = "toolStripSeparator3";
+			this.toolStripSeparator3.Size = new System.Drawing.Size(6, 25);
+			// 
+			// mToolSearchInput
+			// 
+			this.mToolSearchInput.Name = "mToolSearchInput";
+			this.mToolSearchInput.Size = new System.Drawing.Size(100, 25);
+			// 
+			// mToolSearch
+			// 
+			this.mToolSearch.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.mToolSearch.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+			this.大纲查找ToolStripMenuItem,
+			this.全部查找ToolStripMenuItem});
+			this.mToolSearch.Image = ((System.Drawing.Image)(resources.GetObject("mToolSearch.Image")));
+			this.mToolSearch.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.mToolSearch.Name = "mToolSearch";
+			this.mToolSearch.Size = new System.Drawing.Size(32, 22);
+			this.mToolSearch.Text = "查找";
+			// 
+			// 大纲查找ToolStripMenuItem
+			// 
+			this.大纲查找ToolStripMenuItem.Name = "大纲查找ToolStripMenuItem";
+			this.大纲查找ToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.大纲查找ToolStripMenuItem.Text = "大纲查找";
+			this.大纲查找ToolStripMenuItem.Click += new System.EventHandler(this.OnFindInTree);
+			// 
+			// 全部查找ToolStripMenuItem
+			// 
+			this.全部查找ToolStripMenuItem.Name = "全部查找ToolStripMenuItem";
+			this.全部查找ToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.全部查找ToolStripMenuItem.Text = "全部查找";
+			this.全部查找ToolStripMenuItem.Click += new System.EventHandler(this.OnFindInAll);
 			// 
 			// mSplitCtrl
 			// 
@@ -245,6 +304,35 @@ namespace MyNote
 			this.editToolStripMenuItem.Size = new System.Drawing.Size(42, 21);
 			this.editToolStripMenuItem.Text = "Edit";
 			// 
+			// mNotifyMenu
+			// 
+			this.mNotifyMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+			this.显示窗体ToolStripMenuItem,
+			this.mTMQuitApp});
+			this.mNotifyMenu.Name = "mNotifyMenu";
+			this.mNotifyMenu.Size = new System.Drawing.Size(125, 48);
+			// 
+			// 显示窗体ToolStripMenuItem
+			// 
+			this.显示窗体ToolStripMenuItem.Name = "显示窗体ToolStripMenuItem";
+			this.显示窗体ToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
+			this.显示窗体ToolStripMenuItem.Text = "显示窗体";
+			this.显示窗体ToolStripMenuItem.Click += new System.EventHandler(this.OnShowWindow);
+			// 
+			// mTMQuitApp
+			// 
+			this.mTMQuitApp.Name = "mTMQuitApp";
+			this.mTMQuitApp.Size = new System.Drawing.Size(124, 22);
+			this.mTMQuitApp.Text = "退出程序";
+			this.mTMQuitApp.Click += new System.EventHandler(this.OnQuit);
+			// 
+			// mNotifyIcon
+			// 
+			this.mNotifyIcon.ContextMenuStrip = this.mNotifyMenu;
+			this.mNotifyIcon.Icon = ((System.Drawing.Icon)(resources.GetObject("mNotifyIcon.Icon")));
+			this.mNotifyIcon.Text = "系统托盘";
+			this.mNotifyIcon.Visible = true;
+			// 
 			// MainForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -273,6 +361,7 @@ namespace MyNote
 			this.mSplitCtrl.ResumeLayout(false);
 			this.mSysMenu.ResumeLayout(false);
 			this.mSysMenu.PerformLayout();
+			this.mNotifyMenu.ResumeLayout(false);
 			this.ResumeLayout(false);
 			this.PerformLayout();
 

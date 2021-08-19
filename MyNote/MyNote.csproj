@@ -80,9 +80,9 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="View\CreateNoteBookDlg.cs" />
-    <Compile Include="View\CreateNoteBookDlg.Designer.cs">
-      <DependentUpon>CreateNoteBookDlg.cs</DependentUpon>
+    <Compile Include="View\FindResultDialog.cs" />
+    <Compile Include="View\FindResultDialog.Designer.cs">
+      <DependentUpon>FindResultDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="View\NoteEditor.cs" />
     <Compile Include="View\NoteEditor.Designer.cs">
@@ -94,8 +94,8 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="View\CreateNoteBookDlg.resx">
-      <DependentUpon>CreateNoteBookDlg.cs</DependentUpon>
+    <EmbeddedResource Include="View\FindResultDialog.resx">
+      <DependentUpon>FindResultDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="View\NoteTreeView.resx">
       <DependentUpon>NoteTreeView.cs</DependentUpon>

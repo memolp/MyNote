@@ -113,6 +113,65 @@ namespace MyNote.View
 				mCurrentBook.Save();
 		}
 		/// <summary>
+		/// 通过节点的UID选中Node
+		/// </summary>
+		/// <param name="uid"></param>
+		public void SelectNodeWithUid(string uid)
+		{
+			TreeNode node = null;
+			if(FindNodeWithUid(uid, mNoteTreeView.Nodes, out node))
+			{
+				SelectedAndCheckNode(node);
+			}
+		}
+		/// <summary>
+		/// 查找所有节点，包含指定内容
+		/// </summary>
+		/// <param name="text"></param>
+		/// <param name="result"></param>
+		public void FindNodesWithKeyword(string text, ref List<NoteBookNode> result)
+		{
+			foreach (var element in mNoteNodes.Values) 
+			{	
+				if(element.NodeName.IndexOf(text) >= 0)
+				{
+					result.Add(element);
+				}
+			}
+		}
+		/// <summary>
+		/// 选中并选中
+		/// </summary>
+		/// <param name="node"></param>
+		void SelectedAndCheckNode(TreeNode node)
+		{
+			mNoteTreeView.SelectedNode = node;
+			node.Checked = true;
+		}
+		/// <summary>
+		/// 内部查找
+		/// </summary>
+		/// <param name="uid"></param>
+		/// <param name="nodes"></param>
+		/// <param name="result"></param>
+		bool FindNodeWithUid(string uid, TreeNodeCollection nodes, out TreeNode result)
+		{
+			result = null;
+			foreach (TreeNode element in nodes) 
+			{
+				if(element.Name.Equals(uid))
+				{
+					result = element;
+					return true;
+				}
+				if(FindNodeWithUid(uid, element.Nodes, out result))
+				{
+					return true;
+				}
+			}
+			return false;
+		}
+		/// <summary>
 		/// 获取当前笔记本的根路径和名称
 		/// </summary>
 		/// <returns></returns>
@@ -151,7 +210,7 @@ namespace MyNote.View
 			}
 			if(node.Name.Equals(selectedUID))
 			{
-				mNoteTreeView.SelectedNode = node;
+				SelectedAndCheckNode(node);
 			}
 			return node;
 		}
@@ -272,7 +331,7 @@ namespace MyNote.View
 					return;
 				}
 				TreeNode new_node = CreateTreeNodeWithNoteBookNode(bkNode, node.Parent.Nodes, node.Index);
-				mNoteTreeView.SelectedNode = new_node;
+				SelectedAndCheckNode(new_node);
 				mCurrentBook.Save();
 			}else
 			{
@@ -301,7 +360,7 @@ namespace MyNote.View
 					return;
 				}
 				TreeNode new_node = CreateTreeNodeWithNoteBookNode(bkNode, node.Parent.Nodes, node.Index+1);
-				mNoteTreeView.SelectedNode = new_node;
+				SelectedAndCheckNode(new_node);
 				mCurrentBook.Save();
 			}else
 			{

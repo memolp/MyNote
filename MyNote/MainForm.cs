@@ -15,6 +15,7 @@ using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using System.Windows.Forms;
 using MyNote.Data;
+using MyNote.View;
 
 namespace MyNote
 {
@@ -25,6 +26,7 @@ namespace MyNote
 	{
 		MyNoteData mRuntimeData = null;
 		NoteBookNode mCurrentNode = null;
+		FindResultDialog mFindResultDlg = new FindResultDialog();
 
 		public MainForm()
 		{
@@ -36,6 +38,7 @@ namespace MyNote
 			mNodeEditor.Visible = false;
 			mNoteTree.onNodeSelected = this.OnTreeViewNodeSelected;
 			mNodeEditor.onEditorSave = this.OnEditorSaveEvent;
+			mFindResultDlg.onResultItemClick = this.OnSelectTreeViewNode;
 		}
 		/// <summary>
 		/// 窗体加载的时候调用
@@ -232,6 +235,11 @@ namespace MyNote
 		
 		void OnSizeChanged(object sender, EventArgs e)
 		{
+			if(this.WindowState == FormWindowState.Minimized)
+			{
+				this.Visible = false;
+				return;
+			}
 			if(mRuntimeData != null && this.Width > 100 && this.Height > 100)
 			{
 				mRuntimeData.last_frame_width = this.Width;
@@ -253,5 +261,37 @@ namespace MyNote
 			}
 		}
 
+		void OnShowWindow(object sender, EventArgs e)
+		{
+			if(!this.Visible)
+			{
+				this.Visible = true;
+				this.WindowState = FormWindowState.Normal;
+			}
+		}
+		
+		void OnFindInTree(object sender, EventArgs e)
+		{
+			string text = mToolSearchInput.Text;
+			if(text.Length < 1)
+			{
+				return;
+			}
+			List<NoteBookNode> result = new List<NoteBookNode>();
+			mNoteTree.FindNodesWithKeyword(text, ref result);
+			mFindResultDlg.SetResultList(result);
+			mFindResultDlg.Show();
+		}
+		
+		void OnFindInAll(object sender, EventArgs e)
+		{
+	
+		}
+
+		void OnSelectTreeViewNode(string nodeName, string uid)
+		{
+			mNoteTree.SelectNodeWithUid(uid);
+			this.Focus();
+		}
 	}
 }
