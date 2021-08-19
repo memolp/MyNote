@@ -228,6 +228,7 @@ namespace MyNote
 		{
 			if(mCurrentNode != null)
 				this.SaveNoteBookNoteDocument(mCurrentNode);
+			mNotifyIcon.Visible = false;
 			// 退出前强制保存一下
 			mNoteTree.SaveAllNoteBook();
 			Application.Exit();
