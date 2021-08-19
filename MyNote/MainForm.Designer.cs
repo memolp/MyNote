@@ -254,6 +254,7 @@ namespace MyNote
 			this.Controls.Add(this.mToolBar);
 			this.Controls.Add(this.mStatusBar);
 			this.Controls.Add(this.mSysMenu);
+			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
 			this.MainMenuStrip = this.mSysMenu;
 			this.Name = "MainForm";
 			this.StartPosition = System.Windows.Forms.FormStartPosition.WindowsDefaultBounds;
