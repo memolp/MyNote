@@ -105,6 +105,14 @@ namespace MyNote.View
 			this.AddNoteBook(book, string.Empty);
 		}
 		/// <summary>
+		/// 保存全部的笔记本
+		/// </summary>
+		public void SaveAllNoteBook()
+		{
+			if(mCurrentBook != null)
+				mCurrentBook.Save();
+		}
+		/// <summary>
 		/// 获取当前笔记本的根路径和名称
 		/// </summary>
 		/// <returns></returns>
@@ -162,7 +170,7 @@ namespace MyNote.View
 			node.Name = bkNode.NodeDocumentUID;
 			node.Text = bkNode.NodeName;
 			// 带有编号时，需要选择是插入还是追加
-			if(parent.Count >= index)
+			if(parent.Count <= index)
 			{
 				parent.Add(node);
 			}else
@@ -209,7 +217,7 @@ namespace MyNote.View
 			// 获取对应的BookNode
 			if(mNoteNodes.TryGetValue(e.Node.Name, out bkNode))
 			{
-				if(e.Label.Length > 1)
+				if(e.Label.Length > 1 && !e.Label.Equals(bkNode.NodeName))
 				{
 					bkNode.NodeName = e.Label; //更新bk的命名
 					mCurrentBook.Save();
@@ -263,7 +271,7 @@ namespace MyNote.View
 					MessageBox.Show("添加节点失败", "错误");
 					return;
 				}
-				TreeNode new_node = CreateTreeNodeWithNoteBookNode(bkNode, node.Nodes, node.Index);
+				TreeNode new_node = CreateTreeNodeWithNoteBookNode(bkNode, node.Parent.Nodes, node.Index);
 				mNoteTreeView.SelectedNode = new_node;
 				mCurrentBook.Save();
 			}else
@@ -292,12 +300,63 @@ namespace MyNote.View
 					MessageBox.Show("添加节点失败", "错误");
 					return;
 				}
-				TreeNode new_node = CreateTreeNodeWithNoteBookNode(bkNode, node.Nodes, node.Index+1);
+				TreeNode new_node = CreateTreeNodeWithNoteBookNode(bkNode, node.Parent.Nodes, node.Index+1);
 				mNoteTreeView.SelectedNode = new_node;
 				mCurrentBook.Save();
 			}else
 			{
 				MessageBox.Show(string.Format("{0} 不存在,无法执行操作", node.Text), "错误");
+			}
+		}
+		/// <summary>
+		/// 删除当前节点
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		void OnDeleteCurNode(object sender, EventArgs e)
+		{
+			if(mNoteTreeView == null || mCurrentBook == null) return;
+			TreeNode node = mNoteTreeView.SelectedNode;
+			if(node == null) return;
+			// 删除节点- 需要同步删除数据
+			NoteBookNode current = null;
+			if(mNoteNodes.TryGetValue(node.Name, out current))
+			{
+				if(current.childrenList.Count > 0)
+				{
+					// 操作确认
+					var res = MessageBox.Show("删除当前节点也会同时删除其子节点，确认删除?", "提示", MessageBoxButtons.YesNo);
+					if(DialogResult.Yes != res)
+						return;
+				}
+				// 拿到节点的根路径，方便删除全部的节点文件
+				string root_path;
+				string book_name;
+				if(!GetCurrentNoteBookPath(out root_path, out book_name))
+				{
+					return;
+				}
+				string fileRootpath = Path.Combine(root_path, book_name);
+				// 删除全部
+				mCurrentBook.FindNodeAndRemove(current);
+				current.RemoveAllChildren(fileRootpath);
+				current.Remove(fileRootpath);
+				//简单移除自身
+				node.Remove();
+				mCurrentBook.Save();
+			}
+		}
+		void OnNodeExpand(object sender, EventArgs e)
+		{
+			if(mNoteTreeView == null || mCurrentBook == null) return;
+			TreeNode node = mNoteTreeView.SelectedNode;
+			if(node == null) return;
+			if(!node.IsExpanded)
+			{
+				node.ExpandAll();
+			}else
+			{
+				node.Collapse();
 			}
 		}
 		/// <summary>
@@ -328,5 +387,6 @@ namespace MyNote.View
 		{
 			
 		}
+		
 	}
 }

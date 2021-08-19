@@ -86,6 +86,29 @@ namespace MyNote.Data
 			return false;
 		}
 		/// <summary>
+		/// 从节点中移除对象
+		/// </summary>
+		/// <param name="current"></param>
+		/// <returns></returns>
+		public bool FindNodeAndRemove(NoteBookNode current)
+		{
+			for(int i =0; i< childrenList.Count; i++)
+			{
+				var node = childrenList[i];
+				// 如果匹配到根节点
+				if(node.NodeDocumentUID == current.NodeDocumentUID)
+				{
+					childrenList.Remove(node);
+					return true;
+				}else
+				{
+					if(node.FindNodeAndRemove(current))
+						return true;
+				}
+			}
+			return false;
+		}
+		/// <summary>
 		/// 查找节点根据UID
 		/// </summary>
 		/// <param name="uid"></param>
@@ -105,6 +128,33 @@ namespace MyNote.Data
 					return true;
 			}
 			return false;
+		}
+		/// <summary>
+		/// 删除全部的子节点
+		/// </summary>
+		/// <param name="root_path"></param>
+		public void RemoveAllChildren(string root_path)
+		{
+			foreach (var element in childrenList) 
+			{
+				element.Remove(root_path);
+			}
+			childrenList.Clear();
+		}
+		/// <summary>
+		/// 删除节点的文件内容
+		/// </summary>
+		/// <param name="root_path"></param>
+		public void Remove(string root_path)
+		{
+			string filename = string.Format("{0}{1}",NodeDocumentUID, Const.NOTE_BOOK_NODE_EXT);
+			string filepath = Path.Combine(root_path, filename);
+			if(File.Exists(filepath))
+			{
+				File.Delete(filepath);
+			}
+			// 继续删除当前节点的子节点列表
+			this.RemoveAllChildren(root_path);
 		}
 	}
 }

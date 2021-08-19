@@ -24,14 +24,15 @@ namespace MyNote.View
 		private System.Windows.Forms.ToolStripButton mToolNodeMoveLeft;
 		private System.Windows.Forms.ToolStripButton mToolNodeMoveRight;
 		private System.Windows.Forms.ContextMenuStrip mPopMenuBar;
-		private System.Windows.Forms.ToolStripMenuItem 插入子节点ToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem mTMAddChildNode;
 		private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
-		private System.Windows.Forms.ToolStripMenuItem 前面添加节点ToolStripMenuItem;
-		private System.Windows.Forms.ToolStripMenuItem 后面添加节点ToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem mTMAddBeforeNode;
+		private System.Windows.Forms.ToolStripMenuItem mTMAddAfterNode;
 		private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
-		private System.Windows.Forms.ToolStripMenuItem 删除节点ToolStripMenuItem;
-		private System.Windows.Forms.ToolStripMenuItem 全部展开收缩ToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem mTMDeleteNote;
+		private System.Windows.Forms.ToolStripMenuItem mTMExpendAll;
 		private System.Windows.Forms.TabControl mTreeTabCtrl;
+		private System.Windows.Forms.ToolStripLabel mToolLabel;
 		
 		/// <summary>
 		/// Disposes resources used by the control.
@@ -66,14 +67,15 @@ namespace MyNote.View
 			this.mToolNodeMoveLeft = new System.Windows.Forms.ToolStripButton();
 			this.mToolNodeMoveRight = new System.Windows.Forms.ToolStripButton();
 			this.mPopMenuBar = new System.Windows.Forms.ContextMenuStrip(this.components);
-			this.插入子节点ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.mTMAddChildNode = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
-			this.前面添加节点ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.后面添加节点ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.mTMAddBeforeNode = new System.Windows.Forms.ToolStripMenuItem();
+			this.mTMAddAfterNode = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
-			this.删除节点ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.全部展开收缩ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.mTMDeleteNote = new System.Windows.Forms.ToolStripMenuItem();
+			this.mTMExpendAll = new System.Windows.Forms.ToolStripMenuItem();
 			this.mTreeTabCtrl = new System.Windows.Forms.TabControl();
+			this.mToolLabel = new System.Windows.Forms.ToolStripLabel();
 			this.mToolBar.SuspendLayout();
 			this.mPopMenuBar.SuspendLayout();
 			this.SuspendLayout();
@@ -81,6 +83,7 @@ namespace MyNote.View
 			// mToolBar
 			// 
 			this.mToolBar.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+			this.mToolLabel,
 			this.mToolAddChildNode,
 			this.mToolAddBeforeNode,
 			this.mToolAddAfterNode,
@@ -169,58 +172,60 @@ namespace MyNote.View
 			// mPopMenuBar
 			// 
 			this.mPopMenuBar.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-			this.插入子节点ToolStripMenuItem,
+			this.mTMAddChildNode,
 			this.toolStripSeparator3,
-			this.前面添加节点ToolStripMenuItem,
-			this.后面添加节点ToolStripMenuItem,
+			this.mTMAddBeforeNode,
+			this.mTMAddAfterNode,
 			this.toolStripSeparator2,
-			this.删除节点ToolStripMenuItem,
-			this.全部展开收缩ToolStripMenuItem});
+			this.mTMDeleteNote,
+			this.mTMExpendAll});
 			this.mPopMenuBar.Name = "mPopMenuBar";
 			this.mPopMenuBar.Size = new System.Drawing.Size(157, 126);
 			// 
-			// 插入子节点ToolStripMenuItem
+			// mTMAddChildNode
 			// 
-			this.插入子节点ToolStripMenuItem.Name = "插入子节点ToolStripMenuItem";
-			this.插入子节点ToolStripMenuItem.Size = new System.Drawing.Size(156, 22);
-			this.插入子节点ToolStripMenuItem.Text = "添加子节点";
-			this.插入子节点ToolStripMenuItem.Click += new System.EventHandler(this.OnAddChildNodeEvent);
+			this.mTMAddChildNode.Name = "mTMAddChildNode";
+			this.mTMAddChildNode.Size = new System.Drawing.Size(156, 22);
+			this.mTMAddChildNode.Text = "添加子节点";
+			this.mTMAddChildNode.Click += new System.EventHandler(this.OnAddChildNodeEvent);
 			// 
 			// toolStripSeparator3
 			// 
 			this.toolStripSeparator3.Name = "toolStripSeparator3";
 			this.toolStripSeparator3.Size = new System.Drawing.Size(153, 6);
 			// 
-			// 前面添加节点ToolStripMenuItem
+			// mTMAddBeforeNode
 			// 
-			this.前面添加节点ToolStripMenuItem.Name = "前面添加节点ToolStripMenuItem";
-			this.前面添加节点ToolStripMenuItem.Size = new System.Drawing.Size(156, 22);
-			this.前面添加节点ToolStripMenuItem.Text = "前面添加节点";
-			this.前面添加节点ToolStripMenuItem.Click += new System.EventHandler(this.OnAddPrevNodeEvent);
+			this.mTMAddBeforeNode.Name = "mTMAddBeforeNode";
+			this.mTMAddBeforeNode.Size = new System.Drawing.Size(156, 22);
+			this.mTMAddBeforeNode.Text = "前面添加节点";
+			this.mTMAddBeforeNode.Click += new System.EventHandler(this.OnAddPrevNodeEvent);
 			// 
-			// 后面添加节点ToolStripMenuItem
+			// mTMAddAfterNode
 			// 
-			this.后面添加节点ToolStripMenuItem.Name = "后面添加节点ToolStripMenuItem";
-			this.后面添加节点ToolStripMenuItem.Size = new System.Drawing.Size(156, 22);
-			this.后面添加节点ToolStripMenuItem.Text = "后面添加节点";
-			this.后面添加节点ToolStripMenuItem.Click += new System.EventHandler(this.OnAddNextNodeEvent);
+			this.mTMAddAfterNode.Name = "mTMAddAfterNode";
+			this.mTMAddAfterNode.Size = new System.Drawing.Size(156, 22);
+			this.mTMAddAfterNode.Text = "后面添加节点";
+			this.mTMAddAfterNode.Click += new System.EventHandler(this.OnAddNextNodeEvent);
 			// 
 			// toolStripSeparator2
 			// 
 			this.toolStripSeparator2.Name = "toolStripSeparator2";
 			this.toolStripSeparator2.Size = new System.Drawing.Size(153, 6);
 			// 
-			// 删除节点ToolStripMenuItem
+			// mTMDeleteNote
 			// 
-			this.删除节点ToolStripMenuItem.Name = "删除节点ToolStripMenuItem";
-			this.删除节点ToolStripMenuItem.Size = new System.Drawing.Size(156, 22);
-			this.删除节点ToolStripMenuItem.Text = "删除当前节点";
+			this.mTMDeleteNote.Name = "mTMDeleteNote";
+			this.mTMDeleteNote.Size = new System.Drawing.Size(156, 22);
+			this.mTMDeleteNote.Text = "删除当前节点";
+			this.mTMDeleteNote.Click += new System.EventHandler(this.OnDeleteCurNode);
 			// 
-			// 全部展开收缩ToolStripMenuItem
+			// mTMExpendAll
 			// 
-			this.全部展开收缩ToolStripMenuItem.Name = "全部展开收缩ToolStripMenuItem";
-			this.全部展开收缩ToolStripMenuItem.Size = new System.Drawing.Size(156, 22);
-			this.全部展开收缩ToolStripMenuItem.Text = "全部展开(收缩)";
+			this.mTMExpendAll.Name = "mTMExpendAll";
+			this.mTMExpendAll.Size = new System.Drawing.Size(156, 22);
+			this.mTMExpendAll.Text = "全部展开(收缩)";
+			this.mTMExpendAll.Click += new System.EventHandler(this.OnNodeExpand);
 			// 
 			// mTreeTabCtrl
 			// 
@@ -234,6 +239,13 @@ namespace MyNote.View
 			this.mTreeTabCtrl.TabIndex = 2;
 			this.mTreeTabCtrl.SelectedIndexChanged += new System.EventHandler(this.OnNoteBookChange);
 			this.mTreeTabCtrl.KeyDown += new System.Windows.Forms.KeyEventHandler(this.OnKeyDownEvent);
+			// 
+			// mToolLabel
+			// 
+			this.mToolLabel.Image = ((System.Drawing.Image)(resources.GetObject("mToolLabel.Image")));
+			this.mToolLabel.Name = "mToolLabel";
+			this.mToolLabel.Size = new System.Drawing.Size(48, 22);
+			this.mToolLabel.Text = "大纲";
 			// 
 			// NoteTreeView
 			// 

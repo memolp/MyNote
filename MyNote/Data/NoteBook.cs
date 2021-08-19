@@ -78,6 +78,24 @@ namespace MyNote.Data
 			}
 			return false;
 		}
+		public bool FindNodeAndRemove(NoteBookNode current)
+		{
+			for(int i=0; i < BookNotes.Count; i++)
+			{
+				var node = BookNotes[i];
+				// 如果匹配到根节点
+				if(node.NodeDocumentUID == current.NodeDocumentUID)
+				{
+					BookNotes.Remove(current);
+					return true;
+				}else
+				{
+					if(node.FindNodeAndRemove(current))
+						return true;
+				}
+			}
+			return false;
+		}
 		/// <summary>
 		/// 查找Node根据uid
 		/// </summary>
