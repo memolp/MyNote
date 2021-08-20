@@ -8,6 +8,7 @@
  */
 using System;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 
 namespace MyNote.Data
 {
@@ -24,9 +25,10 @@ namespace MyNote.Data
 		public string current_selected_node_uid = string.Empty;
 		public int last_frame_width = 0;
 		public int last_frame_height = 0;
-		
+
 		public MyNoteData()
 		{
 		}
+		
 	}
 }

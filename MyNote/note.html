@@ -7,6 +7,12 @@
 		ul{margin-top:2px;margin-bottom:2px;}
 		ol{margin-top:2px;margin-bottom:2px;}
 		#note-content{position: absolute;top: 10px;left: 10px;right: 10px;bottom: 10px;}
+		code, pre {border-radius: 3px;background-color:#424242;color: inherit;}
+		code {font-family: Consolas, Monaco, Andale Mono, monospace;margin: 0 2px;}
+		pre {line-height: 1.7em;overflow: auto;padding: 6px 10px;border-left: 5px solid #6CE26C;}
+		pre > code {border: 0;display: inline;max-width: initial;padding: 0;margin: 0;overflow: initial;
+    		line-height: inherit;white-space: pre;background: 0 0;}
+		code {color: #ffffff;}
 	</style>
 </head>
 <body>
@@ -47,6 +53,14 @@
 		{
 			var ele = document.getElementById("note-content");
 			content_length = ele.innerHTML.length;
+		}
+		/*
+		* 向文档内容添加新的html内容
+		*/
+		function js_append_html(html_v)
+		{
+			var ele = document.getElementById("note-content");
+			ele.innerHTML = ele.innerHTML + html_v;
 		}
 	</script>
 </body>

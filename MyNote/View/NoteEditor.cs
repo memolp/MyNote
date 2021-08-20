@@ -346,6 +346,17 @@ namespace MyNote.View
 		{
 			mWebBrowser.Document.ExecCommand("InsertUnorderedList", false, null);
 		}
+		
+		void OnInsertCode(object sender, EventArgs e)
+		{
+			MarkDownInputDialog dlg = new MarkDownInputDialog();
+			if(DialogResult.OK == dlg.ShowDialog())
+			{
+				string data = dlg.GetMk2HtmlContent();
+				mWebBrowser.Document.InvokeScript("js_append_html", new string[1]{data});
+			}
+			
+		}
 		/// <summary>
 		/// 插入图片
 		/// </summary>
@@ -522,6 +533,7 @@ namespace MyNote.View
 			}
 			return "png";
 		}
+
 		
 		#region 字号类
 		/// <summary>

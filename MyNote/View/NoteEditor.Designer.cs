@@ -41,6 +41,7 @@ namespace MyNote.View
 		private System.Windows.Forms.ToolStripButton mToolFormatClear;
 		private System.Windows.Forms.ToolStripButton mToolAddImage;
 		private System.Windows.Forms.ToolStripSeparator toolStripSeparator6;
+		private System.Windows.Forms.ToolStripButton mToolInsertCode;
 		
 		/// <summary>
 		/// Disposes resources used by the control.
@@ -91,6 +92,7 @@ namespace MyNote.View
 			this.toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
 			this.mToolFormatClear = new System.Windows.Forms.ToolStripButton();
 			this.mWebBrowser = new System.Windows.Forms.WebBrowser();
+			this.mToolInsertCode = new System.Windows.Forms.ToolStripButton();
 			this.mToolBar.SuspendLayout();
 			this.SuspendLayout();
 			// 
@@ -119,6 +121,7 @@ namespace MyNote.View
 			this.mToolOrderList,
 			this.mToolUnorderList,
 			this.toolStripSeparator5,
+			this.mToolInsertCode,
 			this.mToolAddImage,
 			this.mToolAttachment,
 			this.toolStripSeparator6,
@@ -350,6 +353,16 @@ namespace MyNote.View
 			this.mWebBrowser.Size = new System.Drawing.Size(711, 378);
 			this.mWebBrowser.TabIndex = 1;
 			this.mWebBrowser.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.OnPreviewKeyDown);
+			// 
+			// mToolInsertCode
+			// 
+			this.mToolInsertCode.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.mToolInsertCode.Image = ((System.Drawing.Image)(resources.GetObject("mToolInsertCode.Image")));
+			this.mToolInsertCode.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.mToolInsertCode.Name = "mToolInsertCode";
+			this.mToolInsertCode.Size = new System.Drawing.Size(23, 22);
+			this.mToolInsertCode.Text = "插入Code";
+			this.mToolInsertCode.Click += new System.EventHandler(this.OnInsertCode);
 			// 
 			// NoteEditor
 			// 
