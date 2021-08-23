@@ -110,7 +110,7 @@ namespace MyNote.View
 			// 字号
 			mToolFontSize.Items.AddRange(FontSize.All.ToArray());
 			// 设置属性
-			mWebBrowser.DocumentText = this.HTMLTemplate;
+			mWebBrowser.DocumentText = this.HTMLTemplate; 
 			//mWebBrowser.Document.ExecCommand("EditMode", false, null);
             //mWebBrowser.Document.ExecCommand("LiveResize", false, null);
             mWebBrowser.Document.Focusing += OnDocumentFocusing;
@@ -385,17 +385,10 @@ namespace MyNote.View
 		{
 			mWebBrowser.Document.ExecCommand("removeFormat", false, null);
 		}
-		/// <summary>
-		/// 页面内部使用快捷键
-		/// </summary>
-		/// <param name="sender"></param>
-		/// <param name="e"></param>
-		void OnPreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
+		
+		bool isFirstKeyDown = true;
+		void OnKeyDown(PreviewKeyDownEventArgs e)
 		{
-			if(e.IsInputKey)
-			{
-				return;
-			}
 			// 粘贴键
 			if(e.Control && e.KeyCode == Keys.V)
 			{
@@ -419,9 +412,17 @@ namespace MyNote.View
 						//Clipboard.Clear();
 					}
 				}
+				// 先简单支持RTF到Image
 				else if(Clipboard.ContainsData(DataFormats.Rtf))
 				{
-					
+					Image img = RTFDataToImage((string)Clipboard.GetData(DataFormats.Rtf));
+					if(img != null)
+					{
+						string base64 = this.ImageToBase64(img, ImageFormat.Jpeg);
+						// 部分粘贴不支持
+						mWebBrowser.Document.ExecCommand("InsertImage", false, base64);
+						return;
+					}
 				}
 			}
 			// 快捷键Ctrl+S 保存
@@ -433,7 +434,34 @@ namespace MyNote.View
 				}
 				return;
 			}
+			//Tab缩进功能
+			if(e.KeyCode == Keys.Tab)
+			{
+				if(e.Shift && !e.Control && !e.Alt)
+				{
+					this.OnOutDentClick(null, null);
+					return;
+				}
+				if(!e.Shift && !e.Control && !e.Alt)
+				{
+					this.OnInDentClick(null, null);
+					return;
+				}
+			}
 			RefreshToolBar();
+		}
+		/// <summary>
+		/// 页面内部使用快捷键
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		void OnPreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
+		{
+			if(isFirstKeyDown)
+			{
+				OnKeyDown(e);
+			}
+			isFirstKeyDown = !isFirstKeyDown;
 		}
 		/// <summary>
 		/// 焦点
@@ -545,6 +573,7 @@ namespace MyNote.View
 		
 		Image RTFDataToImage(string rtf_text)
 		{
+			if(string.IsNullOrEmpty(rtf_text)) return null;
 			// 读取全部的图片数据列表
 			IList<string> _ImageList = new List<string>();
 			while (true)

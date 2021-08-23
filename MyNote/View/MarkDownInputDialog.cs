@@ -28,7 +28,7 @@ namespace MyNote.View
 		}
 		void OnOpenMkdownFile(object sender, EventArgs e)
 		{
-	
+			
 		}
 		
 		private string mMk2HtmlContent;
