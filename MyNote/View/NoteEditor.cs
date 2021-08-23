@@ -403,19 +403,25 @@ namespace MyNote.View
 				IDataObject data = Clipboard.GetDataObject();
 				if(Clipboard.ContainsImage()) // 仅支持图片
 				{
-					var img = (Bitmap)data.GetData(DataFormats.Bitmap);
-					ImageFormat fmt = img.RawFormat;
-					if(fmt.Equals(ImageFormat.MemoryBmp))
+					var img = Clipboard.GetImage();//(Bitmap)data.GetData(DataFormats.Bitmap);
+					if(img != null)
 					{
-						fmt = ImageFormat.Png;
+						ImageFormat fmt = img.RawFormat;
+						if(fmt.Equals(ImageFormat.MemoryBmp))
+						{
+							fmt = ImageFormat.Png;
+						}
+						string base64 = this.ImageToBase64(img, fmt);
+						// 部分粘贴不支持
+						mWebBrowser.Document.ExecCommand("InsertImage", false, base64);
+						//SendKeys.SendWait("{ENTER}"); // 这种方式不能百分百粘贴成功
+						// 以下两种方式都可以，重设图片比清空剪贴板可能更符合行为习惯
+						Clipboard.SetImage(img); // 
+						//Clipboard.Clear();
 					}
-					string base64 = this.ImageToBase64(img, fmt);
-					// 部分粘贴不支持
-					mWebBrowser.Document.ExecCommand("InsertImage", false, base64);
-					SendKeys.SendWait("{ENTER}");
 				}
-				return;
 			}
+			// 快捷键Ctrl+S 保存
 			if(e.Control && e.KeyCode == Keys.S)
 			{
 				if(onEditorSave != null)
@@ -533,7 +539,41 @@ namespace MyNote.View
 			}
 			return "png";
 		}
+		
+		Image RTFDataToImage(string rtf_text)
+		{
+			// 读取全部的图片数据列表
+			IList<string> _ImageList = new List<string>();
+			while (true)
+			{
+				int _Index = rtf_text.IndexOf("pichgoal");
+				if (_Index == -1) break;
+				rtf_text = rtf_text.Remove(0, _Index + 8);
 
+				_Index = rtf_text.IndexOf("\r\n");
+				
+				rtf_text = rtf_text.Remove(0, _Index);
+				
+				_Index = rtf_text.IndexOf("}");
+				_ImageList.Add(rtf_text.Substring(0, _Index).Replace("\r\n", ""));
+
+				rtf_text = rtf_text.Remove(0, _Index);
+			}
+			Byte[] buffer = null;
+			for (int i = 0; i != _ImageList.Count; i++)
+			{
+				int _Count = _ImageList[i].Length / 2;
+				buffer = new Byte[_ImageList[i].Length/2];
+
+				for (int z = 0; z != _Count; z++)
+				{
+					string _TempText = _ImageList[i][z * 2].ToString() + _ImageList[i][(z * 2) + 1].ToString();
+					buffer[z] = Convert.ToByte(_TempText, 16);
+				}
+			}
+			MemoryStream ms = new MemoryStream(buffer);
+			return Image.FromStream(ms);
+		}
 		
 		#region 字号类
 		/// <summary>
