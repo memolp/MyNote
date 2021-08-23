@@ -16,7 +16,6 @@ using System.Reflection;
 using System.Text;
 using System.Windows.Forms;
 
-
 namespace MyNote.View
 {
 	/// <summary>
@@ -419,6 +418,10 @@ namespace MyNote.View
 						Clipboard.SetImage(img); // 
 						//Clipboard.Clear();
 					}
+				}
+				else if(Clipboard.ContainsData(DataFormats.Rtf))
+				{
+					
 				}
 			}
 			// 快捷键Ctrl+S 保存

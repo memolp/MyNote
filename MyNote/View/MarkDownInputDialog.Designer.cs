@@ -15,7 +15,7 @@ namespace MyNote.View
 		/// </summary>
 		private System.ComponentModel.IContainer components = null;
 		private System.Windows.Forms.ToolStrip mToolBar;
-		private System.Windows.Forms.RichTextBox mMkDownView;
+		private System.Windows.Forms.TextBox mMkDownView;
 		private System.Windows.Forms.Panel panel1;
 		private System.Windows.Forms.Button mBtnInsert;
 		private System.Windows.Forms.ToolStripButton mToolOpenMkdown;
@@ -44,9 +44,9 @@ namespace MyNote.View
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MarkDownInputDialog));
 			this.mToolBar = new System.Windows.Forms.ToolStrip();
 			this.mToolOpenMkdown = new System.Windows.Forms.ToolStripButton();
-			this.mMkDownView = new System.Windows.Forms.RichTextBox();
 			this.panel1 = new System.Windows.Forms.Panel();
 			this.mBtnInsert = new System.Windows.Forms.Button();
+			this.mMkDownView = new System.Windows.Forms.TextBox();
 			this.mToolBar.SuspendLayout();
 			this.panel1.SuspendLayout();
 			this.SuspendLayout();
@@ -71,15 +71,6 @@ namespace MyNote.View
 			this.mToolOpenMkdown.Text = "打开Mkdown文件";
 			this.mToolOpenMkdown.Click += new System.EventHandler(this.OnOpenMkdownFile);
 			// 
-			// mMkDownView
-			// 
-			this.mMkDownView.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.mMkDownView.Location = new System.Drawing.Point(0, 25);
-			this.mMkDownView.Name = "mMkDownView";
-			this.mMkDownView.Size = new System.Drawing.Size(557, 357);
-			this.mMkDownView.TabIndex = 1;
-			this.mMkDownView.Text = "";
-			// 
 			// panel1
 			// 
 			this.panel1.Controls.Add(this.mBtnInsert);
@@ -101,13 +92,24 @@ namespace MyNote.View
 			this.mBtnInsert.UseVisualStyleBackColor = true;
 			this.mBtnInsert.Click += new System.EventHandler(this.OnBtnInsertCode);
 			// 
+			// mMkDownView
+			// 
+			this.mMkDownView.AcceptsReturn = true;
+			this.mMkDownView.AcceptsTab = true;
+			this.mMkDownView.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.mMkDownView.Location = new System.Drawing.Point(0, 25);
+			this.mMkDownView.Multiline = true;
+			this.mMkDownView.Name = "mMkDownView";
+			this.mMkDownView.Size = new System.Drawing.Size(557, 317);
+			this.mMkDownView.TabIndex = 3;
+			// 
 			// MarkDownInputDialog
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(557, 382);
-			this.Controls.Add(this.panel1);
 			this.Controls.Add(this.mMkDownView);
+			this.Controls.Add(this.panel1);
 			this.Controls.Add(this.mToolBar);
 			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
 			this.Name = "MarkDownInputDialog";
