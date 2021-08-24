@@ -15,7 +15,6 @@ namespace MyNote.View
 		/// </summary>
 		private System.ComponentModel.IContainer components = null;
 		private System.Windows.Forms.ToolStrip mToolBar;
-		private System.Windows.Forms.WebBrowser mWebBrowser;
 		private System.Windows.Forms.ToolStripButton mToolBold;
 		private System.Windows.Forms.ToolStripButton mToolItalic;
 		private System.Windows.Forms.ToolStripComboBox mToolFontFamily;
@@ -35,13 +34,12 @@ namespace MyNote.View
 		private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
 		private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
 		private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
-		private System.Windows.Forms.ToolStripButton mToolAttachment;
 		private System.Windows.Forms.ToolStripSeparator toolStripSeparator5;
-		private System.Windows.Forms.ToolStripButton mToolAlignFull;
 		private System.Windows.Forms.ToolStripButton mToolFormatClear;
-		private System.Windows.Forms.ToolStripButton mToolAddImage;
 		private System.Windows.Forms.ToolStripSeparator toolStripSeparator6;
 		private System.Windows.Forms.ToolStripButton mToolInsertCode;
+		private MyNote.View.RichTextBoxEx mRichTextBox;
+		private System.Windows.Forms.TextBox mNoteTile;
 		
 		/// <summary>
 		/// Disposes resources used by the control.
@@ -79,7 +77,6 @@ namespace MyNote.View
 			this.mToolAlignLeft = new System.Windows.Forms.ToolStripButton();
 			this.mToolAlignCenter = new System.Windows.Forms.ToolStripButton();
 			this.mToolAlignRight = new System.Windows.Forms.ToolStripButton();
-			this.mToolAlignFull = new System.Windows.Forms.ToolStripButton();
 			this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
 			this.mToolOutDent = new System.Windows.Forms.ToolStripButton();
 			this.mToolInDent = new System.Windows.Forms.ToolStripButton();
@@ -87,12 +84,11 @@ namespace MyNote.View
 			this.mToolOrderList = new System.Windows.Forms.ToolStripButton();
 			this.mToolUnorderList = new System.Windows.Forms.ToolStripButton();
 			this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
-			this.mToolAddImage = new System.Windows.Forms.ToolStripButton();
-			this.mToolAttachment = new System.Windows.Forms.ToolStripButton();
+			this.mToolInsertCode = new System.Windows.Forms.ToolStripButton();
 			this.toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
 			this.mToolFormatClear = new System.Windows.Forms.ToolStripButton();
-			this.mWebBrowser = new System.Windows.Forms.WebBrowser();
-			this.mToolInsertCode = new System.Windows.Forms.ToolStripButton();
+			this.mRichTextBox = new MyNote.View.RichTextBoxEx();
+			this.mNoteTile = new System.Windows.Forms.TextBox();
 			this.mToolBar.SuspendLayout();
 			this.SuspendLayout();
 			// 
@@ -113,7 +109,6 @@ namespace MyNote.View
 			this.mToolAlignLeft,
 			this.mToolAlignCenter,
 			this.mToolAlignRight,
-			this.mToolAlignFull,
 			this.toolStripSeparator3,
 			this.mToolOutDent,
 			this.mToolInDent,
@@ -122,13 +117,11 @@ namespace MyNote.View
 			this.mToolUnorderList,
 			this.toolStripSeparator5,
 			this.mToolInsertCode,
-			this.mToolAddImage,
-			this.mToolAttachment,
 			this.toolStripSeparator6,
 			this.mToolFormatClear});
 			this.mToolBar.Location = new System.Drawing.Point(0, 0);
 			this.mToolBar.Name = "mToolBar";
-			this.mToolBar.Size = new System.Drawing.Size(711, 25);
+			this.mToolBar.Size = new System.Drawing.Size(709, 25);
 			this.mToolBar.TabIndex = 0;
 			this.mToolBar.Text = "工具栏";
 			// 
@@ -244,16 +237,6 @@ namespace MyNote.View
 			this.mToolAlignRight.Text = "右对齐";
 			this.mToolAlignRight.Click += new System.EventHandler(this.OnAlignRightClick);
 			// 
-			// mToolAlignFull
-			// 
-			this.mToolAlignFull.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-			this.mToolAlignFull.Image = ((System.Drawing.Image)(resources.GetObject("mToolAlignFull.Image")));
-			this.mToolAlignFull.ImageTransparentColor = System.Drawing.Color.Magenta;
-			this.mToolAlignFull.Name = "mToolAlignFull";
-			this.mToolAlignFull.Size = new System.Drawing.Size(23, 22);
-			this.mToolAlignFull.Text = "两端对齐";
-			this.mToolAlignFull.Click += new System.EventHandler(this.OnAlignFullClick);
-			// 
 			// toolStripSeparator3
 			// 
 			this.toolStripSeparator3.Name = "toolStripSeparator3";
@@ -309,25 +292,15 @@ namespace MyNote.View
 			this.toolStripSeparator5.Name = "toolStripSeparator5";
 			this.toolStripSeparator5.Size = new System.Drawing.Size(6, 25);
 			// 
-			// mToolAddImage
+			// mToolInsertCode
 			// 
-			this.mToolAddImage.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-			this.mToolAddImage.Image = ((System.Drawing.Image)(resources.GetObject("mToolAddImage.Image")));
-			this.mToolAddImage.ImageTransparentColor = System.Drawing.Color.Magenta;
-			this.mToolAddImage.Name = "mToolAddImage";
-			this.mToolAddImage.Size = new System.Drawing.Size(23, 22);
-			this.mToolAddImage.Text = "添加图片";
-			this.mToolAddImage.Click += new System.EventHandler(this.OnAddImageClick);
-			// 
-			// mToolAttachment
-			// 
-			this.mToolAttachment.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-			this.mToolAttachment.Image = ((System.Drawing.Image)(resources.GetObject("mToolAttachment.Image")));
-			this.mToolAttachment.ImageTransparentColor = System.Drawing.Color.Magenta;
-			this.mToolAttachment.Name = "mToolAttachment";
-			this.mToolAttachment.Size = new System.Drawing.Size(23, 22);
-			this.mToolAttachment.Text = "添加附件";
-			this.mToolAttachment.Click += new System.EventHandler(this.OnAddAttachmentClick);
+			this.mToolInsertCode.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.mToolInsertCode.Image = ((System.Drawing.Image)(resources.GetObject("mToolInsertCode.Image")));
+			this.mToolInsertCode.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.mToolInsertCode.Name = "mToolInsertCode";
+			this.mToolInsertCode.Size = new System.Drawing.Size(23, 22);
+			this.mToolInsertCode.Text = "插入Code";
+			this.mToolInsertCode.Click += new System.EventHandler(this.OnInsertCode);
 			// 
 			// toolStripSeparator6
 			// 
@@ -344,34 +317,49 @@ namespace MyNote.View
 			this.mToolFormatClear.Text = "清除格式";
 			this.mToolFormatClear.Click += new System.EventHandler(this.OnFormatClearClick);
 			// 
-			// mWebBrowser
+			// mRichTextBox
 			// 
-			this.mWebBrowser.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.mWebBrowser.Location = new System.Drawing.Point(0, 25);
-			this.mWebBrowser.MinimumSize = new System.Drawing.Size(20, 20);
-			this.mWebBrowser.Name = "mWebBrowser";
-			this.mWebBrowser.Size = new System.Drawing.Size(711, 378);
-			this.mWebBrowser.TabIndex = 1;
-			this.mWebBrowser.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.OnPreviewKeyDown);
+			this.mRichTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+			| System.Windows.Forms.AnchorStyles.Left) 
+			| System.Windows.Forms.AnchorStyles.Right)));
+			this.mRichTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
+			this.mRichTextBox.BulletStyle = MyNote.View.RichTextBoxEx.AdvRichTextBulletStyle.Period;
+			this.mRichTextBox.BulletType = MyNote.View.RichTextBoxEx.AdvRichTextBulletType.Number;
+			this.mRichTextBox.CustomBullet = false;
+			this.mRichTextBox.Font = new System.Drawing.Font("Courier New", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.mRichTextBox.Location = new System.Drawing.Point(0, 58);
+			this.mRichTextBox.Name = "mRichTextBox";
+			this.mRichTextBox.Size = new System.Drawing.Size(709, 344);
+			this.mRichTextBox.TabIndex = 1;
+			this.mRichTextBox.Text = "";
+			this.mRichTextBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.OnKeyDown);
 			// 
-			// mToolInsertCode
+			// mNoteTile
 			// 
-			this.mToolInsertCode.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-			this.mToolInsertCode.Image = ((System.Drawing.Image)(resources.GetObject("mToolInsertCode.Image")));
-			this.mToolInsertCode.ImageTransparentColor = System.Drawing.Color.Magenta;
-			this.mToolInsertCode.Name = "mToolInsertCode";
-			this.mToolInsertCode.Size = new System.Drawing.Size(23, 22);
-			this.mToolInsertCode.Text = "插入Code";
-			this.mToolInsertCode.Click += new System.EventHandler(this.OnInsertCode);
+			this.mNoteTile.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+			| System.Windows.Forms.AnchorStyles.Right)));
+			this.mNoteTile.BackColor = System.Drawing.Color.AliceBlue;
+			this.mNoteTile.BorderStyle = System.Windows.Forms.BorderStyle.None;
+			this.mNoteTile.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+			this.mNoteTile.Location = new System.Drawing.Point(5, 30);
+			this.mNoteTile.Multiline = true;
+			this.mNoteTile.Name = "mNoteTile";
+			this.mNoteTile.ReadOnly = true;
+			this.mNoteTile.Size = new System.Drawing.Size(704, 25);
+			this.mNoteTile.TabIndex = 2;
+			this.mNoteTile.Text = "这是标题";
 			// 
 			// NoteEditor
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.Controls.Add(this.mWebBrowser);
+			this.BackColor = System.Drawing.Color.AliceBlue;
+			this.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+			this.Controls.Add(this.mNoteTile);
+			this.Controls.Add(this.mRichTextBox);
 			this.Controls.Add(this.mToolBar);
 			this.Name = "NoteEditor";
-			this.Size = new System.Drawing.Size(711, 403);
+			this.Size = new System.Drawing.Size(709, 401);
 			this.mToolBar.ResumeLayout(false);
 			this.mToolBar.PerformLayout();
 			this.ResumeLayout(false);

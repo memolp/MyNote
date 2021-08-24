@@ -26,7 +26,6 @@ namespace MyNote
 	{
 		MyNoteData mRuntimeData = null;
 		NoteBookNode mCurrentNode = null;
-		FindResultDialog mFindResultDlg = new FindResultDialog();
 
 		public MainForm()
 		{
@@ -166,56 +165,17 @@ namespace MyNote
 			}
 			mNodeEditor.Visible = true;
 			string filename = string.Format("{0}{1}",bkNode.NodeDocumentUID, Const.NOTE_BOOK_NODE_EXT);
-			string filepath = Path.Combine(root_path, book_name, filename);
-			// 文件不存在说明还没创建保存，需要等Save
-			if(File.Exists(filepath))
+			string filepath = Path.Combine(root_path, book_name);
+			if(!Directory.Exists(filepath))
 			{
-				// 读取文件内容
-				using (FileStream fs = new FileStream(filepath, FileMode.Open))
-				{
-					int size = (int)fs.Length;
-					byte[] data = new byte[size];
-					fs.Read(data, 0, size);
-					// TODO 这里后续要加解密步骤
-					UTF8Encoding con = new UTF8Encoding();
-	     			mNodeEditor.SetContent(con.GetString(data));
-				}
-			}else
-			{
-				mNodeEditor.SetContent(""); //必须清理，否则会导致存储问题
+				Directory.CreateDirectory(filepath);
 			}
+			mNodeEditor.LoadNoteBookNode(mCurrentNode, Path.Combine(filepath,filename));
 		}
 		
 		void SaveNoteBookNoteDocument(NoteBookNode bkNode)
 		{
-			string root_path;
-			string book_name;
-			if(!mNoteTree.GetCurrentNoteBookPath(out root_path, out book_name))
-			{
-				return;
-			}
-			if(!mNodeEditor.IsContentChange())
-			{
-				return;
-			}
-			string filename = string.Format("{0}{1}",bkNode.NodeDocumentUID, Const.NOTE_BOOK_NODE_EXT);
-			string fileRootpath = Path.Combine(root_path, book_name);
-			// 创建笔记本目录
-			if(!Directory.Exists(fileRootpath))
-			{
-				Directory.CreateDirectory(fileRootpath);
-			}
-			string filepath = Path.Combine(fileRootpath,filename);
-			string content = mNodeEditor.GetContent();
-			// 读取文件内容
-			using (FileStream fs = new FileStream(filepath, FileMode.Create))
-			{
-				UTF8Encoding con = new UTF8Encoding();
-				byte[] data = con.GetBytes(content);
-				fs.Write(data, 0, data.Length);
-			}
-			// 更新内容保存
-			mNodeEditor.SetContentSaved();
+			mNodeEditor.SaveNoteBookNode(mCurrentNode);
 		}
 		
 		void OnEditorSaveEvent(object sender, object node)
@@ -245,6 +205,13 @@ namespace MyNote
 			{
 				mRuntimeData.last_frame_width = this.Width;
 				mRuntimeData.last_frame_height = this.Height;
+			}
+			if(mFindResultDlg.Visible)
+			{
+				mNodeEditor.Height = mSplitCtrl.Panel2.Height - mFindResultDlg.Height;
+			}else
+			{
+				mNodeEditor.Height = mSplitCtrl.Panel2.Height;
 			}
 		}
 		void OnWindowClosing(object sender, FormClosingEventArgs e)
@@ -295,13 +262,27 @@ namespace MyNote
 			mNoteTree.FindNodesWithContent(text, ref result);
 			mFindResultDlg.SetResultList(result);
 			mFindResultDlg.Show();
-			mFindResultDlg.Focus();
 		}
 
 		void OnSelectTreeViewNode(string nodeName, string uid)
 		{
 			mNoteTree.SelectNodeWithUid(uid);
 			this.Focus();
+		}
+		/// <summary>
+		/// 查找界面的显示消息
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		void OnFindResultWindow(object sender, EventArgs e)
+		{
+			if(mFindResultDlg.Visible)
+			{
+				mNodeEditor.Height = mSplitCtrl.Panel2.Height - mFindResultDlg.Height;
+			}else
+			{
+				mNodeEditor.Height = mSplitCtrl.Panel2.Height;
+			}
 		}
 	}
 }

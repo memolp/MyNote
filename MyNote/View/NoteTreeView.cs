@@ -157,7 +157,8 @@ namespace MyNote.View
 			string fileRootpath = Path.Combine(root_path, book_name);
 			string filename;
 			string content;
-			
+			// 通过这个控件获取文本
+			RichTextBox box = new RichTextBox();
 			foreach (var element in mNoteNodes.Values) 
 			{	
 				//如果节点里面已经有了，就不打开文件了
@@ -171,7 +172,8 @@ namespace MyNote.View
 					{
 						continue;
 					}
-					content = HtmlToPlainText(File.ReadAllText(filename));
+					box.Rtf = File.ReadAllText(filename);
+					content = box.Text;
 					if(content.Contains(text))
 					{
 						result.Add(element);
