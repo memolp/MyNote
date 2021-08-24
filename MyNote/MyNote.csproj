@@ -87,6 +87,10 @@
     <Compile Include="View\FindResultDialog.Designer.cs">
       <DependentUpon>FindResultDialog.cs</DependentUpon>
     </Compile>
+    <Compile Include="View\FindResultPanel.cs" />
+    <Compile Include="View\FindResultPanel.Designer.cs">
+      <DependentUpon>FindResultPanel.cs</DependentUpon>
+    </Compile>
     <Compile Include="View\MarkDownInputDialog.cs" />
     <Compile Include="View\MarkDownInputDialog.Designer.cs">
       <DependentUpon>MarkDownInputDialog.cs</DependentUpon>
@@ -103,6 +107,9 @@
   <ItemGroup>
     <EmbeddedResource Include="View\FindResultDialog.resx">
       <DependentUpon>FindResultDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\FindResultPanel.resx">
+      <DependentUpon>FindResultPanel.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="View\MarkDownInputDialog.resx">
       <DependentUpon>MarkDownInputDialog.cs</DependentUpon>

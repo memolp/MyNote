@@ -78,6 +78,7 @@ namespace MyNote.View
 			treeView.ShowPlusMinus = true;
 			treeView.ShowRootLines = true;
 			treeView.ContextMenuStrip = mPopMenuBar;
+			treeView.BorderStyle = BorderStyle.None;
 			// 添加事件
 			treeView.AfterSelect += this.OnAfterNodeSelect;
 			treeView.AfterLabelEdit += this.OnAfterLabelEdit;

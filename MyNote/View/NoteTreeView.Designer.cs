@@ -58,6 +58,7 @@ namespace MyNote.View
 			this.components = new System.ComponentModel.Container();
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(NoteTreeView));
 			this.mToolBar = new System.Windows.Forms.ToolStrip();
+			this.mToolLabel = new System.Windows.Forms.ToolStripLabel();
 			this.mToolAddChildNode = new System.Windows.Forms.ToolStripButton();
 			this.mToolAddBeforeNode = new System.Windows.Forms.ToolStripButton();
 			this.mToolAddAfterNode = new System.Windows.Forms.ToolStripButton();
@@ -75,7 +76,6 @@ namespace MyNote.View
 			this.mTMDeleteNote = new System.Windows.Forms.ToolStripMenuItem();
 			this.mTMExpendAll = new System.Windows.Forms.ToolStripMenuItem();
 			this.mTreeTabCtrl = new System.Windows.Forms.TabControl();
-			this.mToolLabel = new System.Windows.Forms.ToolStripLabel();
 			this.mToolBar.SuspendLayout();
 			this.mPopMenuBar.SuspendLayout();
 			this.SuspendLayout();
@@ -94,9 +94,16 @@ namespace MyNote.View
 			this.mToolNodeMoveRight});
 			this.mToolBar.Location = new System.Drawing.Point(0, 0);
 			this.mToolBar.Name = "mToolBar";
-			this.mToolBar.Size = new System.Drawing.Size(281, 25);
+			this.mToolBar.Size = new System.Drawing.Size(279, 25);
 			this.mToolBar.TabIndex = 0;
 			this.mToolBar.Text = "工具栏";
+			// 
+			// mToolLabel
+			// 
+			this.mToolLabel.Image = ((System.Drawing.Image)(resources.GetObject("mToolLabel.Image")));
+			this.mToolLabel.Name = "mToolLabel";
+			this.mToolLabel.Size = new System.Drawing.Size(48, 22);
+			this.mToolLabel.Text = "大纲";
 			// 
 			// mToolAddChildNode
 			// 
@@ -229,32 +236,25 @@ namespace MyNote.View
 			// 
 			// mTreeTabCtrl
 			// 
-			this.mTreeTabCtrl.Alignment = System.Windows.Forms.TabAlignment.Bottom;
 			this.mTreeTabCtrl.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.mTreeTabCtrl.Location = new System.Drawing.Point(0, 25);
 			this.mTreeTabCtrl.Multiline = true;
 			this.mTreeTabCtrl.Name = "mTreeTabCtrl";
 			this.mTreeTabCtrl.SelectedIndex = 0;
-			this.mTreeTabCtrl.Size = new System.Drawing.Size(281, 219);
+			this.mTreeTabCtrl.Size = new System.Drawing.Size(279, 217);
 			this.mTreeTabCtrl.TabIndex = 2;
 			this.mTreeTabCtrl.SelectedIndexChanged += new System.EventHandler(this.OnNoteBookChange);
 			this.mTreeTabCtrl.KeyDown += new System.Windows.Forms.KeyEventHandler(this.OnKeyDownEvent);
-			// 
-			// mToolLabel
-			// 
-			this.mToolLabel.Image = ((System.Drawing.Image)(resources.GetObject("mToolLabel.Image")));
-			this.mToolLabel.Name = "mToolLabel";
-			this.mToolLabel.Size = new System.Drawing.Size(48, 22);
-			this.mToolLabel.Text = "大纲";
 			// 
 			// NoteTreeView
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+			this.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
 			this.Controls.Add(this.mTreeTabCtrl);
 			this.Controls.Add(this.mToolBar);
 			this.Name = "NoteTreeView";
-			this.Size = new System.Drawing.Size(281, 244);
+			this.Size = new System.Drawing.Size(279, 242);
 			this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.OnKeyDownEvent);
 			this.mToolBar.ResumeLayout(false);
 			this.mToolBar.PerformLayout();

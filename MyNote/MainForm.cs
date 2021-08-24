@@ -26,7 +26,6 @@ namespace MyNote
 	{
 		MyNoteData mRuntimeData = null;
 		NoteBookNode mCurrentNode = null;
-		FindResultDialog mFindResultDlg = new FindResultDialog();
 
 		public MainForm()
 		{
@@ -246,6 +245,13 @@ namespace MyNote
 				mRuntimeData.last_frame_width = this.Width;
 				mRuntimeData.last_frame_height = this.Height;
 			}
+			if(mFindResultDlg.Visible)
+			{
+				mNodeEditor.Height = mSplitCtrl.Panel2.Height - mFindResultDlg.Height;
+			}else
+			{
+				mNodeEditor.Height = mSplitCtrl.Panel2.Height;
+			}
 		}
 		void OnWindowClosing(object sender, FormClosingEventArgs e)
 		{
@@ -302,6 +308,22 @@ namespace MyNote
 		{
 			mNoteTree.SelectNodeWithUid(uid);
 			this.Focus();
+		}
+		
+		/// <summary>
+		/// 查找界面的显示消息
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		void OnFindResultWindow(object sender, EventArgs e)
+		{
+			if(mFindResultDlg.Visible)
+			{
+				mNodeEditor.Height = mSplitCtrl.Panel2.Height - mFindResultDlg.Height;
+			}else
+			{
+				mNodeEditor.Height = mSplitCtrl.Panel2.Height;
+			}
 		}
 	}
 }
