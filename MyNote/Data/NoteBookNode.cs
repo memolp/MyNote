@@ -9,6 +9,7 @@
 using System;
 using System.IO;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 using System.Text;
 
 
@@ -33,12 +34,14 @@ namespace MyNote.Data
 		/// </summary>
 		public List<NoteBookNode> childrenList = new List<NoteBookNode>();
 		/// <summary>
-		/// 创建空的NoteBookNode节点
+		/// 节点是否展开
 		/// </summary>
-		public NoteBookNode()
-		{
-
-		}
+		[OptionalFieldAttribute]
+		public bool NodeExpanded = false;  //顺便临时测试动态增加新的属性
+		[OptionalFieldAttribute]
+		public DateTime NodeCreateTime;
+		[OptionalFieldAttribute]
+		public DateTime NodeModifyTime;
 		/// <summary>
 		/// 创建指定名称的NoteBookNode节点，会自动生成UUID
 		/// </summary>
@@ -47,6 +50,7 @@ namespace MyNote.Data
 		{
 			this.NodeName = name;
 			this.NodeDocumentUID = System.Guid.NewGuid().ToString();
+			NodeCreateTime = DateTime.Now;
 		}
 		/// <summary>
 		/// 查找并添加

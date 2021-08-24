@@ -111,8 +111,28 @@ namespace MyNote.View
 		/// </summary>
 		public void SaveAllNoteBook()
 		{
+			OnUpdateNodesState(mNoteTreeView.Nodes);
 			if(mCurrentBook != null)
 				mCurrentBook.Save();
+		}
+		/// <summary>
+		/// 更新节点的状态记录
+		/// </summary>
+		/// <param name="nodes"></param>
+		void OnUpdateNodesState(TreeNodeCollection nodes)
+		{
+			NoteBookNode bknode;
+			foreach(TreeNode elem in nodes)
+			{
+				if(mNoteNodes.TryGetValue(elem.Name, out bknode))
+				{
+					bknode.NodeExpanded = elem.IsExpanded;
+				}
+				if(elem.Nodes.Count > 0)
+				{
+					this.OnUpdateNodesState(elem.Nodes);
+				}
+			}
 		}
 		/// <summary>
 		/// 通过节点的UID选中Node
@@ -267,6 +287,8 @@ namespace MyNote.View
 			TreeNode node = new TreeNode();
 			node.Name = bkNode.NodeDocumentUID;
 			node.Text = bkNode.NodeName;
+			if(bkNode.NodeExpanded)
+				node.Expand();
 			parent.Add(node);
 			// 将子列表也添加进去
 			if(bkNode.childrenList.Count > 0)
@@ -296,6 +318,8 @@ namespace MyNote.View
 			TreeNode node = new TreeNode();
 			node.Name = bkNode.NodeDocumentUID;
 			node.Text = bkNode.NodeName;
+			if(bkNode.NodeExpanded)
+				node.Expand();
 			// 带有编号时，需要选择是插入还是追加
 			if(parent.Count <= index)
 			{

@@ -153,6 +153,7 @@ namespace MyNote
 		{
 			if(mCurrentNode == null) return;
 			this.SaveNoteBookNoteDocument(mCurrentNode);
+			mNoteTree.SaveAllNoteBook();
 		}
 		
 		void LoadNoteBookNoteDocument(NoteBookNode bkNode)
@@ -183,6 +184,8 @@ namespace MyNote
 			{
 				mNodeEditor.SetContent(""); //必须清理，否则会导致存储问题
 			}
+			string label = string.Format("更新:{0}", bkNode.NodeModifyTime.ToLocalTime());
+			mNodeEditor.SetDocumentInfo(label);
 		}
 		
 		void SaveNoteBookNoteDocument(NoteBookNode bkNode)
@@ -215,6 +218,9 @@ namespace MyNote
 			}
 			// 更新内容保存
 			mNodeEditor.SetContentSaved();
+			bkNode.NodeModifyTime = DateTime.Now;
+			string label = string.Format("更新:{0}", bkNode.NodeModifyTime.ToLocalTime());
+			mNodeEditor.SetDocumentInfo(label);
 		}
 		
 		void OnEditorSaveEvent(object sender, object node)

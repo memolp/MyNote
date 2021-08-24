@@ -42,6 +42,7 @@ namespace MyNote.View
 		private System.Windows.Forms.ToolStripButton mToolAddImage;
 		private System.Windows.Forms.ToolStripSeparator toolStripSeparator6;
 		private System.Windows.Forms.ToolStripButton mToolInsertCode;
+		private System.Windows.Forms.Label mDocumentInfoLabel;
 		
 		/// <summary>
 		/// Disposes resources used by the control.
@@ -87,12 +88,13 @@ namespace MyNote.View
 			this.mToolOrderList = new System.Windows.Forms.ToolStripButton();
 			this.mToolUnorderList = new System.Windows.Forms.ToolStripButton();
 			this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
+			this.mToolInsertCode = new System.Windows.Forms.ToolStripButton();
 			this.mToolAddImage = new System.Windows.Forms.ToolStripButton();
 			this.mToolAttachment = new System.Windows.Forms.ToolStripButton();
 			this.toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
 			this.mToolFormatClear = new System.Windows.Forms.ToolStripButton();
 			this.mWebBrowser = new System.Windows.Forms.WebBrowser();
-			this.mToolInsertCode = new System.Windows.Forms.ToolStripButton();
+			this.mDocumentInfoLabel = new System.Windows.Forms.Label();
 			this.mToolBar.SuspendLayout();
 			this.SuspendLayout();
 			// 
@@ -309,6 +311,16 @@ namespace MyNote.View
 			this.toolStripSeparator5.Name = "toolStripSeparator5";
 			this.toolStripSeparator5.Size = new System.Drawing.Size(6, 25);
 			// 
+			// mToolInsertCode
+			// 
+			this.mToolInsertCode.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.mToolInsertCode.Image = ((System.Drawing.Image)(resources.GetObject("mToolInsertCode.Image")));
+			this.mToolInsertCode.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.mToolInsertCode.Name = "mToolInsertCode";
+			this.mToolInsertCode.Size = new System.Drawing.Size(23, 22);
+			this.mToolInsertCode.Text = "插入Code";
+			this.mToolInsertCode.Click += new System.EventHandler(this.OnInsertCode);
+			// 
 			// mToolAddImage
 			// 
 			this.mToolAddImage.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
@@ -346,32 +358,37 @@ namespace MyNote.View
 			// 
 			// mWebBrowser
 			// 
-			this.mWebBrowser.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.mWebBrowser.Location = new System.Drawing.Point(0, 25);
+			this.mWebBrowser.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+			| System.Windows.Forms.AnchorStyles.Left) 
+			| System.Windows.Forms.AnchorStyles.Right)));
+			this.mWebBrowser.Location = new System.Drawing.Point(0, 50);
 			this.mWebBrowser.MinimumSize = new System.Drawing.Size(20, 20);
 			this.mWebBrowser.Name = "mWebBrowser";
-			this.mWebBrowser.Size = new System.Drawing.Size(711, 378);
+			this.mWebBrowser.Size = new System.Drawing.Size(711, 266);
 			this.mWebBrowser.TabIndex = 1;
 			this.mWebBrowser.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.OnPreviewKeyDown);
 			// 
-			// mToolInsertCode
+			// mDocumentInfoLabel
 			// 
-			this.mToolInsertCode.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-			this.mToolInsertCode.Image = ((System.Drawing.Image)(resources.GetObject("mToolInsertCode.Image")));
-			this.mToolInsertCode.ImageTransparentColor = System.Drawing.Color.Magenta;
-			this.mToolInsertCode.Name = "mToolInsertCode";
-			this.mToolInsertCode.Size = new System.Drawing.Size(23, 22);
-			this.mToolInsertCode.Text = "插入Code";
-			this.mToolInsertCode.Click += new System.EventHandler(this.OnInsertCode);
+			this.mDocumentInfoLabel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+			| System.Windows.Forms.AnchorStyles.Right)));
+			this.mDocumentInfoLabel.BackColor = System.Drawing.Color.Lavender;
+			this.mDocumentInfoLabel.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+			this.mDocumentInfoLabel.Location = new System.Drawing.Point(0, 25);
+			this.mDocumentInfoLabel.Name = "mDocumentInfoLabel";
+			this.mDocumentInfoLabel.Size = new System.Drawing.Size(711, 23);
+			this.mDocumentInfoLabel.TabIndex = 2;
+			this.mDocumentInfoLabel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
 			// 
 			// NoteEditor
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+			this.Controls.Add(this.mDocumentInfoLabel);
 			this.Controls.Add(this.mWebBrowser);
 			this.Controls.Add(this.mToolBar);
 			this.Name = "NoteEditor";
-			this.Size = new System.Drawing.Size(711, 403);
+			this.Size = new System.Drawing.Size(711, 319);
 			this.mToolBar.ResumeLayout(false);
 			this.mToolBar.PerformLayout();
 			this.ResumeLayout(false);

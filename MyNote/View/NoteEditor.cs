@@ -63,6 +63,14 @@ namespace MyNote.View
 			OnInitWidgets();
 		}
 		/// <summary>
+		/// 晚点从外面全部移进来
+		/// </summary>
+		/// <param name="info"></param>
+		public void SetDocumentInfo(string info)
+		{
+			mDocumentInfoLabel.Text = info;
+		}
+		/// <summary>
 		/// 设置笔记内容-将调用js方法设置
 		/// </summary>
 		/// <param name="data"></param>
