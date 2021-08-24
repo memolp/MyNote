@@ -62,6 +62,21 @@
 			var ele = document.getElementById("note-content");
 			ele.innerHTML = ele.innerHTML + html_v;
 		}
+		/*
+		* 获取当前的字体
+		*/
+		function js_font_size()
+		{
+			var range = document.selection.createRange(); //IE
+			if(range != null)
+			{
+				var ele = range.parentElement();
+				if(ele.currentStyle)
+					return ele.currentStyle.fontSize;
+				//return window.getComputedStyle(ele).fontSize;
+			}
+			return document.queryCommandValue("fontSize");
+		}
 	</script>
 </body>
 </html>

@@ -140,9 +140,13 @@ namespace MyNote.View
 				}
 				// 字体这个有点问题
 				var font_size = document.queryCommandValue("FontSize");
-				if(font_size != null && font_size is int)
+				if(font_size == null || font_size is DBNull)
 				{
-					mToolFontSize.SelectedItem = FontSize.Find((int)font_size);
+					
+				}else
+				{
+					int sb = Convert.ToInt32(font_size);
+					mToolFontSize.SelectedItem = FontSize.Find(sb);
 				}
 	            // 文字的加粗倾斜等状态
 				mToolBold.Checked = document.queryCommandState("Bold");
@@ -628,6 +632,15 @@ namespace MyNote.View
                         allFontSize.Add(new FontSize(18, 5));
                         allFontSize.Add(new FontSize(24, 6));
                         allFontSize.Add(new FontSize(36, 7));
+                        /*
+                         *  Browser font size 1 -> Safari: 10 px (Actual font size: 8 px)
+							Browser font size 2 -> Safari: 13 px (Actual font size: 10 px)
+							Browser font size 3 -> Safari: 16 px (Actual font size: 12 px)
+							Browser font size 4 -> Safari: 18 px (Actual font size: 14 px)
+							Browser font size 5 -> Safari: 24 px (Actual font size: 18 px)
+							Browser font size 6 -> Safari: 32 px (Actual font size: 24 px)
+							Browser font size 7 -> Safari: 48 px (Actual font size: 36 px)
+                         */
                     }
 
                     return allFontSize;
