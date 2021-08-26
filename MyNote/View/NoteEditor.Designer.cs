@@ -358,6 +358,8 @@ namespace MyNote.View
 			// 
 			// mWebBrowser
 			// 
+			this.mWebBrowser.AllowNavigation = false;
+			this.mWebBrowser.AllowWebBrowserDrop = false;
 			this.mWebBrowser.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
 			| System.Windows.Forms.AnchorStyles.Left) 
 			| System.Windows.Forms.AnchorStyles.Right)));
@@ -366,6 +368,7 @@ namespace MyNote.View
 			this.mWebBrowser.Name = "mWebBrowser";
 			this.mWebBrowser.Size = new System.Drawing.Size(711, 266);
 			this.mWebBrowser.TabIndex = 1;
+			this.mWebBrowser.TabStop = false;
 			this.mWebBrowser.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.OnPreviewKeyDown);
 			// 
 			// mDocumentInfoLabel

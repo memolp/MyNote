@@ -42,6 +42,7 @@ namespace MyNote
 		private System.Windows.Forms.ToolStripMenuItem mToolFindInTree;
 		private System.Windows.Forms.ToolStripMenuItem mToolFindAll;
 		private MyNote.View.FindResultPanel mFindResultDlg;
+		private System.Windows.Forms.ToolStripMenuItem mToolNotifyIcon;
 		
 		/// <summary>
 		/// Disposes resources used by the form.
@@ -88,6 +89,7 @@ namespace MyNote
 			this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
 			this.mMenuSave = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+			this.mToolNotifyIcon = new System.Windows.Forms.ToolStripMenuItem();
 			this.mMenuExit = new System.Windows.Forms.ToolStripMenuItem();
 			this.editToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.mNotifyMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
@@ -218,14 +220,17 @@ namespace MyNote
 			this.mSplitCtrl.Size = new System.Drawing.Size(1024, 696);
 			this.mSplitCtrl.SplitterDistance = 300;
 			this.mSplitCtrl.TabIndex = 0;
+			this.mSplitCtrl.TabStop = false;
 			// 
 			// mNoteTree
 			// 
+			this.mNoteTree.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
 			this.mNoteTree.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.mNoteTree.Location = new System.Drawing.Point(0, 0);
 			this.mNoteTree.Name = "mNoteTree";
 			this.mNoteTree.Size = new System.Drawing.Size(300, 696);
 			this.mNoteTree.TabIndex = 0;
+			this.mNoteTree.TabStop = false;
 			// 
 			// mFindResultDlg
 			// 
@@ -236,6 +241,7 @@ namespace MyNote
 			this.mFindResultDlg.Name = "mFindResultDlg";
 			this.mFindResultDlg.Size = new System.Drawing.Size(720, 172);
 			this.mFindResultDlg.TabIndex = 1;
+			this.mFindResultDlg.TabStop = false;
 			this.mFindResultDlg.Visible = false;
 			this.mFindResultDlg.VisibleChanged += new System.EventHandler(this.OnFindResultWindow);
 			// 
@@ -249,6 +255,7 @@ namespace MyNote
 			this.mNodeEditor.Name = "mNodeEditor";
 			this.mNodeEditor.Size = new System.Drawing.Size(720, 515);
 			this.mNodeEditor.TabIndex = 0;
+			this.mNodeEditor.TabStop = false;
 			// 
 			// mSysMenu
 			// 
@@ -269,6 +276,7 @@ namespace MyNote
 			this.toolStripSeparator1,
 			this.mMenuSave,
 			this.toolStripSeparator2,
+			this.mToolNotifyIcon,
 			this.mMenuExit});
 			this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
 			this.fileToolStripMenuItem.Size = new System.Drawing.Size(39, 21);
@@ -308,6 +316,13 @@ namespace MyNote
 			this.toolStripSeparator2.Name = "toolStripSeparator2";
 			this.toolStripSeparator2.Size = new System.Drawing.Size(180, 6);
 			// 
+			// mToolNotifyIcon
+			// 
+			this.mToolNotifyIcon.Name = "mToolNotifyIcon";
+			this.mToolNotifyIcon.Size = new System.Drawing.Size(183, 22);
+			this.mToolNotifyIcon.Text = "系统托盘";
+			this.mToolNotifyIcon.Click += new System.EventHandler(this.OnNotifyIconHandler);
+			// 
 			// mMenuExit
 			// 
 			this.mMenuExit.Name = "mMenuExit";
@@ -335,7 +350,7 @@ namespace MyNote
 			this.mToolShowWindow.Name = "mToolShowWindow";
 			this.mToolShowWindow.Size = new System.Drawing.Size(124, 22);
 			this.mToolShowWindow.Text = "显示窗体";
-			this.mToolShowWindow.Click += new System.EventHandler(this.OnShowWindow);
+			this.mToolShowWindow.Click += new System.EventHandler(this.OnNotifyIconHandler);
 			// 
 			// mTMQuitApp
 			// 

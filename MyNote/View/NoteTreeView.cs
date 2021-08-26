@@ -79,6 +79,7 @@ namespace MyNote.View
 			treeView.ShowRootLines = true;
 			treeView.ContextMenuStrip = mPopMenuBar;
 			treeView.BorderStyle = BorderStyle.None;
+			treeView.TabStop = false;
 			// 添加事件
 			treeView.AfterSelect += this.OnAfterNodeSelect;
 			treeView.AfterLabelEdit += this.OnAfterLabelEdit;
@@ -111,7 +112,8 @@ namespace MyNote.View
 		/// </summary>
 		public void SaveAllNoteBook()
 		{
-			OnUpdateNodesState(mNoteTreeView.Nodes);
+			if(mNoteTreeView != null)
+				OnUpdateNodesState(mNoteTreeView.Nodes);
 			if(mCurrentBook != null)
 				mCurrentBook.Save();
 		}
@@ -497,6 +499,97 @@ namespace MyNote.View
 				mCurrentBook.Save();
 			}
 		}
+		/// <summary>
+		/// 前移
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		void OnMoveToPrev(object sender, EventArgs e)
+		{
+			if(mNoteTreeView == null || mCurrentBook == null) return;
+			TreeNode node = mNoteTreeView.SelectedNode;
+			if(node == null || node.Index <= 0) return;
+			NoteBookNode current = null;
+			if(mNoteNodes.TryGetValue(node.Name, out current))
+			{
+				//TODO 如何插入当前节点的后面
+				if(!mCurrentBook.FindNodeAndSet(current, false))
+				{
+					MessageBox.Show("添加节点失败", "错误");
+					return;
+				}
+				int old = node.Index;
+				TreeNodeCollection nodes = node.Parent.Nodes;
+				nodes.RemoveAt(node.Index);
+				nodes.Insert(old-1, node);
+				SelectedAndCheckNode(node);
+				mCurrentBook.Save();
+			}else
+			{
+				MessageBox.Show(string.Format("{0} 不存在,无法执行操作", node.Text), "错误");
+			}
+			
+		}
+		/// <summary>
+		/// 后移
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		void OnMoveToNext(object sender, EventArgs e)
+		{
+			if(mNoteTreeView == null || mCurrentBook == null) return;
+			TreeNode node = mNoteTreeView.SelectedNode;
+			if(node == null || node.Index >= node.Parent.Nodes.Count) return;
+			NoteBookNode current = null;
+			if(mNoteNodes.TryGetValue(node.Name, out current))
+			{
+				//TODO 如何插入当前节点的后面
+				if(!mCurrentBook.FindNodeAndSet(current, true))
+				{
+					MessageBox.Show("添加节点失败", "错误");
+					return;
+				}
+				int old = node.Index;
+				TreeNodeCollection nodes = node.Parent.Nodes;
+				nodes.RemoveAt(node.Index);
+				nodes.Insert(old + 1, node);
+				SelectedAndCheckNode(node);
+				mCurrentBook.Save();
+			}else
+			{
+				MessageBox.Show(string.Format("{0} 不存在,无法执行操作", node.Text), "错误");
+			}
+		}
+		/// <summary>
+		/// 移到父节的后面变成同级节点
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		void OnMoveToLeft(object sender, EventArgs e)
+		{
+			if(mNoteTreeView == null || mCurrentBook == null) return;
+			TreeNode node = mNoteTreeView.SelectedNode;
+			if(node == null || node.Index >= node.Parent.Nodes.Count) return;
+			NoteBookNode current = null;
+			if(mNoteNodes.TryGetValue(node.Name, out current))
+			{
+				
+			}
+		}
+		/// <summary>
+		/// 移动到前个节点的子节点
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		void OnMoveToRight(object sender, EventArgs e)
+		{
+			
+		}
+		/// <summary>
+		/// 节点展开
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		void OnNodeExpand(object sender, EventArgs e)
 		{
 			if(mNoteTreeView == null || mCurrentBook == null) return;

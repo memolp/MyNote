@@ -123,9 +123,6 @@ namespace MyNote.View
             //mWebBrowser.Document.ExecCommand("LiveResize", false, null);
             mWebBrowser.Document.Focusing += OnDocumentFocusing;
             mWebBrowser.Document.Click += OnDocumentClick;
-
-            mWebBrowser.AllowNavigation = false;            // 禁止内部导航
-            mWebBrowser.AllowWebBrowserDrop = false;        // 拖文件进来
 		}
 		/// <summary>
 		/// 工具栏更新标记-方式递归式更新

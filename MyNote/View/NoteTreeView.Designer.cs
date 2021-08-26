@@ -148,6 +148,7 @@ namespace MyNote.View
 			this.mToolNodeMovePrev.Name = "mToolNodeMovePrev";
 			this.mToolNodeMovePrev.Size = new System.Drawing.Size(23, 22);
 			this.mToolNodeMovePrev.Text = "节点前移";
+			this.mToolNodeMovePrev.Click += new System.EventHandler(this.OnMoveToPrev);
 			// 
 			// mToolNodeMoveNext
 			// 
@@ -157,6 +158,7 @@ namespace MyNote.View
 			this.mToolNodeMoveNext.Name = "mToolNodeMoveNext";
 			this.mToolNodeMoveNext.Size = new System.Drawing.Size(23, 22);
 			this.mToolNodeMoveNext.Text = "节点后移";
+			this.mToolNodeMoveNext.Click += new System.EventHandler(this.OnMoveToNext);
 			// 
 			// mToolNodeMoveLeft
 			// 
@@ -166,6 +168,7 @@ namespace MyNote.View
 			this.mToolNodeMoveLeft.Name = "mToolNodeMoveLeft";
 			this.mToolNodeMoveLeft.Size = new System.Drawing.Size(23, 22);
 			this.mToolNodeMoveLeft.Text = "节点左移";
+			this.mToolNodeMoveLeft.Click += new System.EventHandler(this.OnMoveToLeft);
 			// 
 			// mToolNodeMoveRight
 			// 
@@ -175,6 +178,7 @@ namespace MyNote.View
 			this.mToolNodeMoveRight.Name = "mToolNodeMoveRight";
 			this.mToolNodeMoveRight.Size = new System.Drawing.Size(23, 22);
 			this.mToolNodeMoveRight.Text = "节点右移";
+			this.mToolNodeMoveRight.Click += new System.EventHandler(this.OnMoveToRight);
 			// 
 			// mPopMenuBar
 			// 
@@ -243,6 +247,7 @@ namespace MyNote.View
 			this.mTreeTabCtrl.SelectedIndex = 0;
 			this.mTreeTabCtrl.Size = new System.Drawing.Size(279, 217);
 			this.mTreeTabCtrl.TabIndex = 2;
+			this.mTreeTabCtrl.TabStop = false;
 			this.mTreeTabCtrl.SelectedIndexChanged += new System.EventHandler(this.OnNoteBookChange);
 			this.mTreeTabCtrl.KeyDown += new System.Windows.Forms.KeyEventHandler(this.OnKeyDownEvent);
 			// 

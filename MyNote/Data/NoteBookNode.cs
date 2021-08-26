@@ -51,6 +51,91 @@ namespace MyNote.Data
 			this.NodeName = name;
 			this.NodeDocumentUID = System.Guid.NewGuid().ToString();
 			NodeCreateTime = DateTime.Now;
+			NodeModifyTime = DateTime.Now;
+		}
+		public NoteBookNode GetParentNode(NoteBookNode current, NoteBookNode parent, bool remove_node)
+		{
+			NoteBookNode bknode = null;
+			for(int i=0; i < childrenList.Count; i++)
+			{
+				var node = childrenList[i];
+				// 如果匹配到根节点
+				if(node.NodeDocumentUID == current.NodeDocumentUID)
+				{
+					if(remove_node)
+					{
+						childrenList.RemoveAt(i);
+					}
+					return parent;
+				}else
+				{
+					bknode = node.GetParentNode(current, node, remove_node);
+					if(bknode != null)
+					{
+						return bknode;
+					}
+				}
+			}
+			return bknode;
+		}
+		public NoteBookNode GetPrevNode(NoteBookNode current, bool remove_node)
+		{
+			NoteBookNode bknode = null;
+			for(int i=0; i < childrenList.Count; i++)
+			{
+				var node = childrenList[i];
+				// 如果匹配到根节点
+				if(node.NodeDocumentUID == current.NodeDocumentUID)
+				{
+					if(i == 0) return null;
+					bknode = childrenList[i-1];
+					if(remove_node)
+					{
+						childrenList.RemoveAt(i);
+					}
+					return bknode;
+				}else
+				{
+					bknode = node.GetPrevNode(current, remove_node);
+					if(bknode != null)
+					{
+						return bknode;
+					}
+				}
+			}
+			return bknode;
+		}
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="current"></param>
+		/// <param name="after"></param>
+		/// <returns></returns>
+		public bool FindNodeAndSet(NoteBookNode current, bool after)
+		{
+			for(int i=0; i < childrenList.Count; i++)
+			{
+				var node = childrenList[i];
+				// 如果匹配到根节点
+				if(node.NodeDocumentUID == current.NodeDocumentUID)
+				{
+					if(after) // 后面插入
+					{
+						childrenList.RemoveAt(i);
+						childrenList.Insert(i + 1, current);
+					}else  //前面插入
+					{
+						childrenList.RemoveAt(i);
+						childrenList.Insert(i - 1, current);
+					}
+					return true;
+				}else
+				{
+					if(node.FindNodeAndSet(current, after))
+						return true;
+				}
+			}
+			return false;
 		}
 		/// <summary>
 		/// 查找并添加

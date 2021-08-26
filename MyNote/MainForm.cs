@@ -231,21 +231,11 @@ namespace MyNote
 		
 		void OnQuit(object sender, EventArgs e)
 		{
-			if(mCurrentNode != null)
-				this.SaveNoteBookNoteDocument(mCurrentNode);
-			mNotifyIcon.Visible = false;
-			// 退出前强制保存一下
-			mNoteTree.SaveAllNoteBook();
 			Application.Exit();
 		}
 		
 		void OnSizeChanged(object sender, EventArgs e)
 		{
-			if(this.WindowState == FormWindowState.Minimized)
-			{
-				this.Visible = false;
-				return;
-			}
 			if(mRuntimeData != null && this.Width > 100 && this.Height > 100)
 			{
 				mRuntimeData.last_frame_width = this.Width;
@@ -261,7 +251,20 @@ namespace MyNote
 		}
 		void OnWindowClosing(object sender, FormClosingEventArgs e)
 		{
-			this.SaveRuntimeData();
+			// 非用户行为关闭程序，则直接关闭程序
+			if(e.CloseReason != CloseReason.UserClosing)
+			{
+				//数据存储
+				this.SaveRuntimeData();
+				if(mCurrentNode != null)
+					this.SaveNoteBookNoteDocument(mCurrentNode);
+				mNotifyIcon.Visible = false;
+				// 退出前强制保存一下
+				mNoteTree.SaveAllNoteBook();
+				return;
+			}
+			this.OnNotifyIconHandler(this, null);
+			e.Cancel = true;
 		}
 		
 		void OnWindowShown(object sender, EventArgs e)
@@ -271,15 +274,6 @@ namespace MyNote
 				// 添加全部已打开的笔记本
 				NoteBook book = NoteBook.LoadBookFromDisk(mRuntimeData.opened_book);
 				mNoteTree.AddNoteBook(book, mRuntimeData.current_selected_node_uid);
-			}
-		}
-
-		void OnShowWindow(object sender, EventArgs e)
-		{
-			if(!this.Visible)
-			{
-				this.Visible = true;
-				this.WindowState = FormWindowState.Normal;
 			}
 		}
 		
@@ -329,6 +323,26 @@ namespace MyNote
 			}else
 			{
 				mNodeEditor.Height = mSplitCtrl.Panel2.Height;
+			}
+		}
+		/// <summary>
+		/// 系统托盘
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		void OnNotifyIconHandler(object sender, EventArgs e)
+		{
+			this.Visible = !this.Visible;
+			if(this.Visible && this.WindowState == FormWindowState.Minimized)
+			{
+				this.WindowState = FormWindowState.Normal;
+			}
+			if(this.Visible)
+			{
+				mToolShowWindow.Text = "系统托盘";
+			}else
+			{
+				mToolShowWindow.Text = "显示窗体";
 			}
 		}
 	}

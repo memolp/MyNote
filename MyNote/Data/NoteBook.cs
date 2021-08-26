@@ -42,6 +42,86 @@ namespace MyNote.Data
 			
 		}
 		/// <summary>
+		/// 获取父节点
+		/// </summary>
+		/// <param name="current"></param>
+		/// <param name="remove_node"></param>
+		/// <returns></returns>
+		public NoteBookNode GetParentNode(NoteBookNode current, bool remove_node)
+		{
+			NoteBookNode bknode = null;
+			for(int i=0; i < BookNotes.Count; i++)
+			{
+				var node = BookNotes[i];
+				// 如果匹配到根节点
+				if(node.NodeDocumentUID == current.NodeDocumentUID)
+				{
+					return null;
+				}else
+				{
+					bknode = node.GetParentNode(current, node, remove_node);
+					if(bknode != null) return bknode;
+				}
+			}
+			return null;
+		}
+		public NoteBookNode GetPrevNode(NoteBookNode current, bool remove_node)
+		{
+			NoteBookNode bknode = null;
+			for(int i=0; i < BookNotes.Count; i++)
+			{
+				var node = BookNotes[i];
+				// 如果匹配到根节点
+				if(node.NodeDocumentUID == current.NodeDocumentUID)
+				{
+					if(i == 0) return null;
+					bknode = BookNotes[i - 1];
+					if(remove_node)
+					{
+						BookNotes.RemoveAt(i);
+					}
+					return bknode;
+				}else
+				{
+					bknode = node.GetPrevNode(current, remove_node);
+					if(bknode != null) return bknode;
+				}
+			}
+			return null;
+		}
+		/// <summary>
+		/// 设置的位置
+		/// </summary>
+		/// <param name="current"></param>
+		/// <param name="after"></param>
+		/// <returns></returns>
+		public bool FindNodeAndSet(NoteBookNode current, bool after)
+		{
+			for(int i=0; i < BookNotes.Count; i++)
+			{
+				var node = BookNotes[i];
+				// 如果匹配到根节点
+				if(node.NodeDocumentUID == current.NodeDocumentUID)
+				{
+					if(after) // 后面插入
+					{
+						BookNotes.RemoveAt(i);
+						BookNotes.Insert(i + 1, current);
+					}else  //前面插入
+					{
+						BookNotes.RemoveAt(i);
+						BookNotes.Insert(i - 1, current);
+					}
+					return true;
+				}else
+				{
+					if(node.FindNodeAndSet(current, after))
+						return true;
+				}
+			}
+			return false;
+		}
+		/// <summary>
 		/// 遍历整个笔记本查找节点并添加
 		/// </summary>
 		/// <param name="current"></param>
