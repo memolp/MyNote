@@ -12,9 +12,11 @@
 		pre {line-height: 1.7em;padding: 1px 5px;margin:0;border-left: 5px solid #6CE26C;}
 		pre > code {border: 0;display: inline;max-width: initial;padding: 0;margin: 0;line-height: inherit;white-space: pre;background: 0 0;}
 	</style>
+	<link rel="stylesheet" type="text/css" href="file:///PRISM_ABS_PATH/prism.css"/>
 </head>
 <body>
 	<div id="note-content" contenteditable="true"></div>
+	<script type="text/javascript" src="file:///PRISM_ABS_PATH/prism.js"> </script>
 	<script type="text/javascript">
 		var content_length = 0;
 		/*
@@ -58,7 +60,24 @@
 		function js_append_html(html_v)
 		{
 			var ele = document.getElementById("note-content");
-			ele.innerHTML = ele.innerHTML + html_v;
+			ele.innerHTML = ele.innerHTML + html_v + "<br>";
+		}
+		/**
+		* 向文档增加代码
+		*/
+		function js_append_code(raw_code, language_name)
+		{
+			var inlang = Prism.languages[language_name]
+			if( inlang != null)
+			{
+				var html = Prism.highlight(raw_code, inlang, language_name);
+				html = "<pre><code class='language-"+language_name+"'>"+html+'</code></pre><br>';
+				js_append_html(html);
+			}else
+			{
+				var html = '<pre><code class="language-'+language_name+'">'+raw_code+'</code></pre><br>';
+				js_append_html(html);
+			}
 		}
 		/*
 		* 获取当前的字体
@@ -73,9 +92,22 @@
 					return ele.currentStyle.fontSize;
 				//return window.getComputedStyle(ele).fontSize;
 			}
-			return document.queryCommandValue("fontSize");
+			return "12px";
+		}
+		function js_set_font_size(font_size)
+		{
+			var range = document.selection.createRange(); //IE
+			if(range != null)
+			{
+				var ele = range.parentElement();
+				if(ele.currentStyle)
+					return ele.currentStyle.fontSize;
+				//return window.getComputedStyle(ele).fontSize;
+			}
+			return "12px";
 		}
 	</script>
+	
 </body>
 </html>
 <!-- 笔记页面模板 -->

@@ -83,6 +83,10 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="View\CodeDialog.cs" />
+    <Compile Include="View\CodeDialog.Designer.cs">
+      <DependentUpon>CodeDialog.cs</DependentUpon>
+    </Compile>
     <Compile Include="View\FindResultDialog.cs" />
     <Compile Include="View\FindResultDialog.Designer.cs">
       <DependentUpon>FindResultDialog.cs</DependentUpon>
@@ -105,6 +109,9 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="View\CodeDialog.resx">
+      <DependentUpon>CodeDialog.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="View\FindResultDialog.resx">
       <DependentUpon>FindResultDialog.cs</DependentUpon>
     </EmbeddedResource>
@@ -122,6 +129,12 @@
       <LogicalName>my_note_html</LogicalName>
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </EmbeddedResource>
+    <None Include="prism.css">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="prism.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="MainForm.resx">

@@ -43,6 +43,7 @@ namespace MyNote.View
 		private System.Windows.Forms.ToolStripSeparator toolStripSeparator6;
 		private System.Windows.Forms.ToolStripButton mToolInsertCode;
 		private System.Windows.Forms.Label mDocumentInfoLabel;
+		private System.Windows.Forms.ToolStripButton enterToolBar;
 		
 		/// <summary>
 		/// Disposes resources used by the control.
@@ -93,6 +94,7 @@ namespace MyNote.View
 			this.mToolAttachment = new System.Windows.Forms.ToolStripButton();
 			this.toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
 			this.mToolFormatClear = new System.Windows.Forms.ToolStripButton();
+			this.enterToolBar = new System.Windows.Forms.ToolStripButton();
 			this.mWebBrowser = new System.Windows.Forms.WebBrowser();
 			this.mDocumentInfoLabel = new System.Windows.Forms.Label();
 			this.mToolBar.SuspendLayout();
@@ -123,6 +125,7 @@ namespace MyNote.View
 			this.mToolOrderList,
 			this.mToolUnorderList,
 			this.toolStripSeparator5,
+			this.enterToolBar,
 			this.mToolInsertCode,
 			this.mToolAddImage,
 			this.mToolAttachment,
@@ -355,6 +358,16 @@ namespace MyNote.View
 			this.mToolFormatClear.Size = new System.Drawing.Size(23, 22);
 			this.mToolFormatClear.Text = "清除格式";
 			this.mToolFormatClear.Click += new System.EventHandler(this.OnFormatClearClick);
+			// 
+			// enterToolBar
+			// 
+			this.enterToolBar.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.enterToolBar.Image = ((System.Drawing.Image)(resources.GetObject("enterToolBar.Image")));
+			this.enterToolBar.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.enterToolBar.Name = "enterToolBar";
+			this.enterToolBar.Size = new System.Drawing.Size(23, 22);
+			this.enterToolBar.Text = "插入换行符";
+			this.enterToolBar.Click += new System.EventHandler(this.OnInsertEnterEvent);
 			// 
 			// mWebBrowser
 			// 
