@@ -231,6 +231,7 @@ namespace MyNote.Data
 			using(FileStream fs = new FileStream(path, FileMode.Open))
 			{
 				NoteBook book = (NoteBook)formatter.Deserialize(fs);
+				book.BookPath = path; // 修复移动笔记本位置后，绝对路径问题。
 				return book;
 			}
 		}
