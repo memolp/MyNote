@@ -67,8 +67,10 @@ namespace MyNote.View
 		/// 晚点从外面全部移进来
 		/// </summary>
 		/// <param name="info"></param>
-		public void SetDocumentInfo(string info)
+		/// <param name="title"></param>
+		public void SetDocumentInfo(string title,string info)
 		{
+			mDocumentTitleLabel.Text = title;
 			mDocumentInfoLabel.Text = info;
 		}
 		/// <summary>

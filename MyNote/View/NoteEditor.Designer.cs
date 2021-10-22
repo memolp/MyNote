@@ -44,6 +44,8 @@ namespace MyNote.View
 		private System.Windows.Forms.ToolStripButton mToolInsertCode;
 		private System.Windows.Forms.Label mDocumentInfoLabel;
 		private System.Windows.Forms.ToolStripButton enterToolBar;
+		private System.Windows.Forms.Panel panel1;
+		private System.Windows.Forms.Label mDocumentTitleLabel;
 		
 		/// <summary>
 		/// Disposes resources used by the control.
@@ -89,15 +91,18 @@ namespace MyNote.View
 			this.mToolOrderList = new System.Windows.Forms.ToolStripButton();
 			this.mToolUnorderList = new System.Windows.Forms.ToolStripButton();
 			this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
+			this.enterToolBar = new System.Windows.Forms.ToolStripButton();
 			this.mToolInsertCode = new System.Windows.Forms.ToolStripButton();
 			this.mToolAddImage = new System.Windows.Forms.ToolStripButton();
 			this.mToolAttachment = new System.Windows.Forms.ToolStripButton();
 			this.toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
 			this.mToolFormatClear = new System.Windows.Forms.ToolStripButton();
-			this.enterToolBar = new System.Windows.Forms.ToolStripButton();
 			this.mWebBrowser = new System.Windows.Forms.WebBrowser();
 			this.mDocumentInfoLabel = new System.Windows.Forms.Label();
+			this.panel1 = new System.Windows.Forms.Panel();
+			this.mDocumentTitleLabel = new System.Windows.Forms.Label();
 			this.mToolBar.SuspendLayout();
+			this.panel1.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// mToolBar
@@ -314,6 +319,16 @@ namespace MyNote.View
 			this.toolStripSeparator5.Name = "toolStripSeparator5";
 			this.toolStripSeparator5.Size = new System.Drawing.Size(6, 25);
 			// 
+			// enterToolBar
+			// 
+			this.enterToolBar.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.enterToolBar.Image = ((System.Drawing.Image)(resources.GetObject("enterToolBar.Image")));
+			this.enterToolBar.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.enterToolBar.Name = "enterToolBar";
+			this.enterToolBar.Size = new System.Drawing.Size(23, 22);
+			this.enterToolBar.Text = "插入换行符";
+			this.enterToolBar.Click += new System.EventHandler(this.OnInsertEnterEvent);
+			// 
 			// mToolInsertCode
 			// 
 			this.mToolInsertCode.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
@@ -359,16 +374,6 @@ namespace MyNote.View
 			this.mToolFormatClear.Text = "清除格式";
 			this.mToolFormatClear.Click += new System.EventHandler(this.OnFormatClearClick);
 			// 
-			// enterToolBar
-			// 
-			this.enterToolBar.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-			this.enterToolBar.Image = ((System.Drawing.Image)(resources.GetObject("enterToolBar.Image")));
-			this.enterToolBar.ImageTransparentColor = System.Drawing.Color.Magenta;
-			this.enterToolBar.Name = "enterToolBar";
-			this.enterToolBar.Size = new System.Drawing.Size(23, 22);
-			this.enterToolBar.Text = "插入换行符";
-			this.enterToolBar.Click += new System.EventHandler(this.OnInsertEnterEvent);
-			// 
 			// mWebBrowser
 			// 
 			this.mWebBrowser.AllowNavigation = false;
@@ -386,27 +391,50 @@ namespace MyNote.View
 			// 
 			// mDocumentInfoLabel
 			// 
-			this.mDocumentInfoLabel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-			| System.Windows.Forms.AnchorStyles.Right)));
+			this.mDocumentInfoLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
 			this.mDocumentInfoLabel.BackColor = System.Drawing.Color.Lavender;
 			this.mDocumentInfoLabel.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-			this.mDocumentInfoLabel.Location = new System.Drawing.Point(0, 25);
+			this.mDocumentInfoLabel.Location = new System.Drawing.Point(531, 0);
 			this.mDocumentInfoLabel.Name = "mDocumentInfoLabel";
-			this.mDocumentInfoLabel.Size = new System.Drawing.Size(711, 23);
+			this.mDocumentInfoLabel.Size = new System.Drawing.Size(180, 23);
 			this.mDocumentInfoLabel.TabIndex = 2;
 			this.mDocumentInfoLabel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// panel1
+			// 
+			this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+			| System.Windows.Forms.AnchorStyles.Right)));
+			this.panel1.BackColor = System.Drawing.Color.Lavender;
+			this.panel1.Controls.Add(this.mDocumentTitleLabel);
+			this.panel1.Controls.Add(this.mDocumentInfoLabel);
+			this.panel1.Location = new System.Drawing.Point(0, 25);
+			this.panel1.Name = "panel1";
+			this.panel1.Size = new System.Drawing.Size(711, 23);
+			this.panel1.TabIndex = 3;
+			// 
+			// mDocumentTitleLabel
+			// 
+			this.mDocumentTitleLabel.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+			this.mDocumentTitleLabel.ForeColor = System.Drawing.Color.DodgerBlue;
+			this.mDocumentTitleLabel.Location = new System.Drawing.Point(0, 0);
+			this.mDocumentTitleLabel.Name = "mDocumentTitleLabel";
+			this.mDocumentTitleLabel.Size = new System.Drawing.Size(525, 23);
+			this.mDocumentTitleLabel.TabIndex = 3;
+			this.mDocumentTitleLabel.Text = "label1";
+			this.mDocumentTitleLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			// 
 			// NoteEditor
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.Controls.Add(this.mDocumentInfoLabel);
+			this.Controls.Add(this.panel1);
 			this.Controls.Add(this.mWebBrowser);
 			this.Controls.Add(this.mToolBar);
 			this.Name = "NoteEditor";
 			this.Size = new System.Drawing.Size(711, 319);
 			this.mToolBar.ResumeLayout(false);
 			this.mToolBar.PerformLayout();
+			this.panel1.ResumeLayout(false);
 			this.ResumeLayout(false);
 			this.PerformLayout();
 

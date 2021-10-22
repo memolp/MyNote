@@ -49,7 +49,8 @@ namespace MyNote
 			this.LoadRuntimeData();
 			if(mRuntimeData.last_frame_width > 100 && mRuntimeData.last_frame_height > 100)
 			this.SetBounds(this.Left, this.Top, mRuntimeData.last_frame_width, mRuntimeData.last_frame_height);
-			
+			// 注册全局快捷键
+			this.OnRegisterHotKey();
 		}
 		void LoadRuntimeData()
 		{
@@ -185,7 +186,7 @@ namespace MyNote
 				mNodeEditor.SetContent(""); //必须清理，否则会导致存储问题
 			}
 			string label = string.Format("更新:{0}", bkNode.NodeModifyTime.ToLocalTime());
-			mNodeEditor.SetDocumentInfo(label);
+			mNodeEditor.SetDocumentInfo(bkNode.NodeName, label);
 		}
 		
 		void SaveNoteBookNoteDocument(NoteBookNode bkNode)
@@ -220,7 +221,7 @@ namespace MyNote
 			mNodeEditor.SetContentSaved();
 			bkNode.NodeModifyTime = DateTime.Now;
 			string label = string.Format("更新:{0}", bkNode.NodeModifyTime.ToLocalTime());
-			mNodeEditor.SetDocumentInfo(label);
+			mNodeEditor.SetDocumentInfo(bkNode.NodeName, label);
 		}
 		
 		void OnEditorSaveEvent(object sender, object node)
@@ -261,6 +262,8 @@ namespace MyNote
 				mNotifyIcon.Visible = false;
 				// 退出前强制保存一下
 				mNoteTree.SaveAllNoteBook();
+				// 取消快捷键注册
+				this.OnUnregisterHotKey();
 				return;
 			}
 			this.OnNotifyIconHandler(this, null);
@@ -344,6 +347,45 @@ namespace MyNote
 			{
 				mToolShowWindow.Text = "显示窗体";
 			}
+		}
+		// 截图快捷键ID
+		private const int HotCaptureKeyID = 1000;
+		// 退出截图ID
+		private const int HotExitCaptureID = 1001;
+		/// <summary>
+		/// 注册快捷键
+		/// </summary>
+		void OnRegisterHotKey()
+		{
+			if(!Win32Api.RegisterHotKey(this.Handle, HotCaptureKeyID, KeyModifiers.Ctrl|KeyModifiers.Alt, Keys.A))
+			{
+				MessageBox.Show("注册截图热键失败", "提示");
+			}
+		}
+		/// <summary>
+		/// 取消注册
+		/// </summary>
+		void OnUnregisterHotKey()
+		{
+			Win32Api.UnregisterHotKey(this.Handle, HotCaptureKeyID);
+		}
+		
+		private const int WM_HOTKEY = 0x0312;
+		protected override void WndProc(ref Message m)
+		{
+			switch(m.Msg)
+			{
+				case WM_HOTKEY:
+					// 按下截图键
+					if(m.WParam.ToInt32()  == HotCaptureKeyID)
+					{
+						ScreenCapture.FormCapture capture = new ScreenCapture.FormCapture();
+						capture.Show();
+						//MessageBox.Show("截图键","d");
+					}
+					break;
+			}
+			base.WndProc(ref m);
 		}
 	}
 }
