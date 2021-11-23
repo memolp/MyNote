@@ -86,11 +86,13 @@ namespace MyNote.View
 			
 			mCurrentBook = book;		// 当前的book
 			mNoteTreeView = treeView; //当前的TreeView
+			mNoteTreeView.BeginUpdate();
 			// 添加全部数据
 			foreach (var element in book.BookNotes) 
 			{
 				CreateTreeNodeWithNoteBookNode(element, treeView.Nodes, selectedUId);
 			}
+			mNoteTreeView.EndUpdate();
 			// 添加Tab页
 			TabPage page = new TabPage(book.BookName);
 			page.Controls.Add(treeView);
