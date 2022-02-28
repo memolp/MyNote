@@ -124,7 +124,7 @@ namespace MyNote
 			// 
 			this.mStatusLabel.Name = "mStatusLabel";
 			this.mStatusLabel.Size = new System.Drawing.Size(149, 17);
-			this.mStatusLabel.Text = "当前版本1.2 - 作者:覃贵锋";
+			this.mStatusLabel.Text = "当前版本2.1 - 作者:覃贵锋";
 			// 
 			// mToolBar
 			// 

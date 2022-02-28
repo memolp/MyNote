@@ -58,6 +58,7 @@ namespace MyNote.View
 			this.mCryptKey.Name = "mCryptKey";
 			this.mCryptKey.Size = new System.Drawing.Size(280, 21);
 			this.mCryptKey.TabIndex = 1;
+			this.mCryptKey.UseSystemPasswordChar = true;
 			// 
 			// button1
 			// 
