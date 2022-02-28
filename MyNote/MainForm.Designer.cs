@@ -43,6 +43,8 @@ namespace MyNote
 		private System.Windows.Forms.ToolStripMenuItem mToolFindAll;
 		private MyNote.View.FindResultPanel mFindResultDlg;
 		private System.Windows.Forms.ToolStripMenuItem mToolNotifyIcon;
+		private System.Windows.Forms.ToolStripMenuItem toolsToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem preferencesToolStripMenuItem;
 		
 		/// <summary>
 		/// Disposes resources used by the form.
@@ -92,6 +94,8 @@ namespace MyNote
 			this.mToolNotifyIcon = new System.Windows.Forms.ToolStripMenuItem();
 			this.mMenuExit = new System.Windows.Forms.ToolStripMenuItem();
 			this.editToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.preferencesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.mNotifyMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
 			this.mToolShowWindow = new System.Windows.Forms.ToolStripMenuItem();
 			this.mTMQuitApp = new System.Windows.Forms.ToolStripMenuItem();
@@ -261,7 +265,8 @@ namespace MyNote
 			// 
 			this.mSysMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
 			this.fileToolStripMenuItem,
-			this.editToolStripMenuItem});
+			this.editToolStripMenuItem,
+			this.toolsToolStripMenuItem});
 			this.mSysMenu.Location = new System.Drawing.Point(0, 0);
 			this.mSysMenu.Name = "mSysMenu";
 			this.mSysMenu.Size = new System.Drawing.Size(1024, 25);
@@ -337,6 +342,21 @@ namespace MyNote
 			this.editToolStripMenuItem.Size = new System.Drawing.Size(42, 21);
 			this.editToolStripMenuItem.Text = "Edit";
 			// 
+			// toolsToolStripMenuItem
+			// 
+			this.toolsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+			this.preferencesToolStripMenuItem});
+			this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
+			this.toolsToolStripMenuItem.Size = new System.Drawing.Size(52, 21);
+			this.toolsToolStripMenuItem.Text = "Tools";
+			// 
+			// preferencesToolStripMenuItem
+			// 
+			this.preferencesToolStripMenuItem.Name = "preferencesToolStripMenuItem";
+			this.preferencesToolStripMenuItem.Size = new System.Drawing.Size(153, 22);
+			this.preferencesToolStripMenuItem.Text = "Preferences...";
+			this.preferencesToolStripMenuItem.Click += new System.EventHandler(this.OnPreferencesShowEvt);
+			// 
 			// mNotifyMenu
 			// 
 			this.mNotifyMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -381,6 +401,7 @@ namespace MyNote
 			this.StartPosition = System.Windows.Forms.FormStartPosition.WindowsDefaultBounds;
 			this.Text = "MyNote - 笔记本";
 			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.OnWindowClosing);
+			this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.OnWindowClosed);
 			this.Load += new System.EventHandler(this.WindowLoaded);
 			this.Shown += new System.EventHandler(this.OnWindowShown);
 			this.SizeChanged += new System.EventHandler(this.OnSizeChanged);

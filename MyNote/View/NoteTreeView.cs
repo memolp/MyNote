@@ -55,8 +55,18 @@ namespace MyNote.View
 		{
 			InitializeComponent();
 		}
+		/// <summary>
+		/// 获取当前正在显示的笔记本
+		/// </summary>
+		public NoteBook CurrentBook
+		{
+			get
+			{
+				return mCurrentBook;
+			}
+		}
 		
-		public void AddNoteBook(NoteBook book, string selectedUId)
+		public void AddNoteBook(NoteBook book)
 		{
 			if(mCurrentBook != null) 
 			{
@@ -80,6 +90,7 @@ namespace MyNote.View
 			treeView.ContextMenuStrip = mPopMenuBar;
 			treeView.BorderStyle = BorderStyle.None;
 			treeView.TabStop = false;
+			treeView.HideSelection = false;
 			// 添加事件
 			treeView.AfterSelect += this.OnAfterNodeSelect;
 			treeView.AfterLabelEdit += this.OnAfterLabelEdit;
@@ -90,7 +101,7 @@ namespace MyNote.View
 			// 添加全部数据
 			foreach (var element in book.BookNotes) 
 			{
-				CreateTreeNodeWithNoteBookNode(element, treeView.Nodes, selectedUId);
+				CreateTreeNodeWithNoteBookNode(element, treeView.Nodes, book.CurrentNodeUID);
 			}
 			mNoteTreeView.EndUpdate();
 			// 添加Tab页
@@ -100,14 +111,6 @@ namespace MyNote.View
 			mTreeTabCtrl.TabPages.Add(page);
 			// 记录到列表中
 			mTabNoteData.Add(book.BookUID, treeView);
-		}
-		/// <summary>
-		/// 设置笔记本
-		/// </summary>
-		/// <param name="book"></param>
-		public void AddNoteBook(NoteBook book)
-		{
-			this.AddNoteBook(book, string.Empty);
 		}
 		/// <summary>
 		/// 保存全部的笔记本
@@ -238,6 +241,7 @@ namespace MyNote.View
 		void SelectedAndCheckNode(TreeNode node)
 		{
 			mNoteTreeView.SelectedNode = node;
+			mCurrentBook.CurrentNodeUID = node.Name;
 			node.Checked = true;
 		}
 		/// <summary>
@@ -288,9 +292,10 @@ namespace MyNote.View
 			// 添加到数据记录
 			mNoteNodes.Add(bkNode.NodeDocumentUID, bkNode);
 			
-			TreeNode node = new TreeNode();
+			TreeNodeEx node = new TreeNodeEx();
 			node.Name = bkNode.NodeDocumentUID;
 			node.Text = bkNode.NodeName;
+			node.Item = bkNode;
 			if(bkNode.NodeExpanded)
 				node.Expand();
 			parent.Add(node);
@@ -319,9 +324,10 @@ namespace MyNote.View
 		{
 			// 添加到数据记录
 			mNoteNodes.Add(bkNode.NodeDocumentUID, bkNode);
-			TreeNode node = new TreeNode();
+			TreeNodeEx node = new TreeNodeEx();
 			node.Name = bkNode.NodeDocumentUID;
 			node.Text = bkNode.NodeName;
+			node.Item = bkNode;
 			if(bkNode.NodeExpanded)
 				node.Expand();
 			// 带有编号时，需要选择是插入还是追加
@@ -353,6 +359,7 @@ namespace MyNote.View
 			// 获取对应的BookNode
 			if(mNoteNodes.TryGetValue(e.Node.Name, out bkNode))
 			{
+				this.SelectedAndCheckNode(e.Node);
 				if(this.onNodeSelected != null)
 				{
 					this.onNodeSelected(this, bkNode);
@@ -382,6 +389,7 @@ namespace MyNote.View
 				}
 			}
 		}
+		#region 树节点添加操作
 		/// <summary>
 		/// 添加子节点
 		/// </summary>
@@ -390,20 +398,17 @@ namespace MyNote.View
 		void OnAddChildNodeEvent(object sender, EventArgs e)
 		{
 			if(mNoteTreeView == null || mCurrentBook == null) return;
-			TreeNode node = mNoteTreeView.SelectedNode;
+			TreeNodeEx node = mNoteTreeView.SelectedNode as TreeNodeEx;
 			if(node == null) return;
 			
-			NoteBookNode parent = null;
-			if(mNoteNodes.TryGetValue(node.Name, out parent))
-			{
-				NoteBookNode bkNode = new NoteBookNode("未命名标题");
-				TreeNode new_node = CreateTreeNodeWithNoteBookNode(bkNode, node.Nodes, bkNode.NodeDocumentUID);
-				parent.childrenList.Add(bkNode);
-				mCurrentBook.Save();
-			}else
-			{
-				MessageBox.Show(string.Format("{0} 不存在,无法添加子节点", node.Text), "错误");
-			}
+			NoteBookNode parent = node.Item;
+			NoteBookNode bkNode = new NoteBookNode("未命名标题");
+			TreeNode new_node = CreateTreeNodeWithNoteBookNode(bkNode, node.Nodes, bkNode.NodeDocumentUID);
+			// NoteBookNode的父节点添加子对象
+			parent.childrenList.Add(bkNode);
+			mCurrentBook.Save();
+			SelectedAndCheckNode(new_node);
+			//MessageBox.Show(string.Format("{0} 不存在,无法添加子节点", node.Text), "错误");
 		}
 		/// <summary>
 		/// 前面添加节点
@@ -414,25 +419,21 @@ namespace MyNote.View
 		{
 			if(mNoteTreeView == null || mCurrentBook == null) return;
 			TreeNode node = mNoteTreeView.SelectedNode;
-			if(node == null) return;
+			if(node == null || node.Parent == null) return;
 			
-			NoteBookNode current = null;
-			if(mNoteNodes.TryGetValue(node.Name, out current))
+			NoteBookNode parent = ((TreeNodeEx)node.Parent).Item;
+			NoteBookNode bkNode = new NoteBookNode("未命名标题");
+			// 次方便的基础建立在数据是一一对应的。
+			if(node.Index <= node.Parent.Nodes.Count)
 			{
-				NoteBookNode bkNode = new NoteBookNode("未命名标题");
-				//TODO 如何插入当前节点的前面
-				if(!mCurrentBook.FindNodeAndAdd(current, bkNode, false))
-				{
-					MessageBox.Show("添加节点失败", "错误");
-					return;
-				}
-				TreeNode new_node = CreateTreeNodeWithNoteBookNode(bkNode, node.Parent.Nodes, node.Index);
-				SelectedAndCheckNode(new_node);
-				mCurrentBook.Save();
+				parent.childrenList.Insert(node.Index, bkNode);
 			}else
 			{
-				MessageBox.Show(string.Format("{0} 不存在,无法执行操作", node.Text), "错误");
+				parent.childrenList.Add(bkNode);
 			}
+			TreeNode new_node = CreateTreeNodeWithNoteBookNode(bkNode, node.Parent.Nodes, node.Index);
+			mCurrentBook.Save();
+			SelectedAndCheckNode(new_node);
 		}
 		/// <summary>
 		/// 后面添加节点
@@ -443,25 +444,21 @@ namespace MyNote.View
 		{
 			if(mNoteTreeView == null || mCurrentBook == null) return;
 			TreeNode node = mNoteTreeView.SelectedNode;
-			if(node == null) return;
+			if(node == null || node.Parent == null) return;
 			
-			NoteBookNode current = null;
-			if(mNoteNodes.TryGetValue(node.Name, out current))
+			NoteBookNode parent = ((TreeNodeEx)node.Parent).Item;
+			NoteBookNode bkNode = new NoteBookNode("未命名标题");
+			// 次方便的基础建立在数据是一一对应的。
+			if(node.Index + 1 <= node.Parent.Nodes.Count)
 			{
-				NoteBookNode bkNode = new NoteBookNode("未命名标题");
-				//TODO 如何插入当前节点的后面
-				if(!mCurrentBook.FindNodeAndAdd(current, bkNode, true))
-				{
-					MessageBox.Show("添加节点失败", "错误");
-					return;
-				}
-				TreeNode new_node = CreateTreeNodeWithNoteBookNode(bkNode, node.Parent.Nodes, node.Index+1);
-				SelectedAndCheckNode(new_node);
-				mCurrentBook.Save();
+				parent.childrenList.Insert(node.Index + 1, bkNode);
 			}else
 			{
-				MessageBox.Show(string.Format("{0} 不存在,无法执行操作", node.Text), "错误");
+				parent.childrenList.Add(bkNode);
 			}
+			TreeNode new_node = CreateTreeNodeWithNoteBookNode(bkNode, node.Parent.Nodes, node.Index+1);
+			SelectedAndCheckNode(new_node);
+			mCurrentBook.Save();
 		}
 		/// <summary>
 		/// 删除当前节点
@@ -471,35 +468,33 @@ namespace MyNote.View
 		void OnDeleteCurNode(object sender, EventArgs e)
 		{
 			if(mNoteTreeView == null || mCurrentBook == null) return;
-			TreeNode node = mNoteTreeView.SelectedNode;
+			TreeNodeEx node = (TreeNodeEx)mNoteTreeView.SelectedNode;
 			if(node == null) return;
 			// 删除节点- 需要同步删除数据
-			NoteBookNode current = null;
-			if(mNoteNodes.TryGetValue(node.Name, out current))
+			NoteBookNode current = node.Item;
+			if(current.childrenList.Count > 0)
 			{
-				if(current.childrenList.Count > 0)
-				{
-					// 操作确认
-					var res = MessageBox.Show("删除当前节点也会同时删除其子节点，确认删除?", "提示", MessageBoxButtons.YesNo);
-					if(DialogResult.Yes != res)
-						return;
-				}
-				// 拿到节点的根路径，方便删除全部的节点文件
-				string root_path;
-				string book_name;
-				if(!GetCurrentNoteBookPath(out root_path, out book_name))
-				{
+				// 操作确认
+				var res = MessageBox.Show("删除当前节点也会同时删除其子节点，确认删除?", "提示", MessageBoxButtons.YesNo);
+				if(DialogResult.Yes != res)
 					return;
-				}
-				string fileRootpath = Path.Combine(root_path, book_name);
-				// 删除全部
-				mCurrentBook.FindNodeAndRemove(current);
-				current.RemoveAllChildren(fileRootpath);
-				current.Remove(fileRootpath);
-				//简单移除自身
-				node.Remove();
-				mCurrentBook.Save();
 			}
+			// 拿到节点的根路径，方便删除全部的节点文件
+			string root_path;
+			string book_name;
+			if(!GetCurrentNoteBookPath(out root_path, out book_name))
+			{
+				return;
+			}
+			string fileRootpath = Path.Combine(root_path, book_name);
+			// 删除全部
+			mCurrentBook.FindNodeAndRemove(current);
+			current.RemoveAllChildren(fileRootpath);
+			current.Remove(fileRootpath);
+			//简单移除自身
+			node.Remove();
+			mCurrentBook.Save();
+			mNoteNodes.Remove(node.Name);
 		}
 		/// <summary>
 		/// 前移
@@ -509,28 +504,21 @@ namespace MyNote.View
 		void OnMoveToPrev(object sender, EventArgs e)
 		{
 			if(mNoteTreeView == null || mCurrentBook == null) return;
-			TreeNode node = mNoteTreeView.SelectedNode;
-			if(node == null || node.Index <= 0) return;
-			NoteBookNode current = null;
-			if(mNoteNodes.TryGetValue(node.Name, out current))
-			{
-				//TODO 如何插入当前节点的后面
-				if(!mCurrentBook.FindNodeAndSet(current, false))
-				{
-					MessageBox.Show("添加节点失败", "错误");
-					return;
-				}
-				int old = node.Index;
-				TreeNodeCollection nodes = node.Parent.Nodes;
-				nodes.RemoveAt(node.Index);
-				nodes.Insert(old-1, node);
-				SelectedAndCheckNode(node);
-				mCurrentBook.Save();
-			}else
-			{
-				MessageBox.Show(string.Format("{0} 不存在,无法执行操作", node.Text), "错误");
-			}
+			TreeNodeEx node = (TreeNodeEx)mNoteTreeView.SelectedNode;
+			if(node == null || node.Index <= 0 || node.Parent == null) return;
 			
+			NoteBookNode current = node.Item;
+			NoteBookNode parent = ((TreeNodeEx)node.Parent).Item;
+			int old = node.Index;
+			TreeNodeCollection nodes = node.Parent.Nodes;
+			nodes.RemoveAt(node.Index);
+			nodes.Insert(old-1, node);
+			// 直接更新
+			parent.childrenList.RemoveAt(old);
+			parent.childrenList.Insert(old -1, current);
+			
+			SelectedAndCheckNode(node);
+			mCurrentBook.Save();
 		}
 		/// <summary>
 		/// 后移
@@ -540,27 +528,21 @@ namespace MyNote.View
 		void OnMoveToNext(object sender, EventArgs e)
 		{
 			if(mNoteTreeView == null || mCurrentBook == null) return;
-			TreeNode node = mNoteTreeView.SelectedNode;
-			if(node == null || node.Index >= node.Parent.Nodes.Count) return;
-			NoteBookNode current = null;
-			if(mNoteNodes.TryGetValue(node.Name, out current))
-			{
-				//TODO 如何插入当前节点的后面
-				if(!mCurrentBook.FindNodeAndSet(current, true))
-				{
-					MessageBox.Show("添加节点失败", "错误");
-					return;
-				}
-				int old = node.Index;
-				TreeNodeCollection nodes = node.Parent.Nodes;
-				nodes.RemoveAt(node.Index);
-				nodes.Insert(old + 1, node);
-				SelectedAndCheckNode(node);
-				mCurrentBook.Save();
-			}else
-			{
-				MessageBox.Show(string.Format("{0} 不存在,无法执行操作", node.Text), "错误");
-			}
+			TreeNodeEx node = (TreeNodeEx)mNoteTreeView.SelectedNode;
+			if(node == null || node.Parent == null || node.Index >= node.Parent.Nodes.Count) return;
+			
+			NoteBookNode current = node.Item;
+			NoteBookNode parent = ((TreeNodeEx)node.Parent).Item;
+			int old = node.Index;
+			TreeNodeCollection nodes = node.Parent.Nodes;
+			nodes.RemoveAt(node.Index);
+			nodes.Insert(old + 1, node);
+			// 直接更新
+			parent.childrenList.RemoveAt(old);
+			parent.childrenList.Insert(old + 1, current);
+			
+			SelectedAndCheckNode(node);
+			mCurrentBook.Save();
 		}
 		/// <summary>
 		/// 移到父节的后面变成同级节点
@@ -570,13 +552,22 @@ namespace MyNote.View
 		void OnMoveToLeft(object sender, EventArgs e)
 		{
 			if(mNoteTreeView == null || mCurrentBook == null) return;
-			TreeNode node = mNoteTreeView.SelectedNode;
-			if(node == null || node.Index >= node.Parent.Nodes.Count) return;
-			NoteBookNode current = null;
-			if(mNoteNodes.TryGetValue(node.Name, out current))
-			{
-				
-			}
+			TreeNodeEx node = (TreeNodeEx)mNoteTreeView.SelectedNode;
+			if(node == null || node.Parent == null || node.Index >= node.Parent.Nodes.Count) return;
+			TreeNode new_parent = node.Parent.Parent;
+			if(new_parent == null) return;
+			
+			NoteBookNode current = node.Item;
+			NoteBookNode parent = ((TreeNodeEx)node.Parent).Item;
+			NoteBookNode nparent = ((TreeNodeEx)new_parent).Item;
+			parent.childrenList.Remove(current);
+			nparent.childrenList.Add(current);
+			
+			node.Parent.Nodes.Remove(node);
+			new_parent.Nodes.Add(node);
+			
+			SelectedAndCheckNode(node);
+			mCurrentBook.Save();
 		}
 		/// <summary>
 		/// 移动到前个节点的子节点
@@ -585,8 +576,24 @@ namespace MyNote.View
 		/// <param name="e"></param>
 		void OnMoveToRight(object sender, EventArgs e)
 		{
+			if(mNoteTreeView == null || mCurrentBook == null) return;
+			TreeNodeEx node = (TreeNodeEx)mNoteTreeView.SelectedNode;
+			if(node == null || node.Parent == null || node.Index == 0) return;
+			TreeNode new_parent = node.Parent.Nodes[node.Index-1];
 			
+			NoteBookNode current = node.Item;
+			NoteBookNode parent = ((TreeNodeEx)node.Parent).Item;
+			NoteBookNode nparent = ((TreeNodeEx)new_parent).Item;
+			parent.childrenList.Remove(current);
+			nparent.childrenList.Add(current);
+			
+			node.Parent.Nodes.Remove(node);
+			new_parent.Nodes.Add(node);
+			
+			SelectedAndCheckNode(node);
+			mCurrentBook.Save();
 		}
+		#endregion
 		/// <summary>
 		/// 节点展开
 		/// </summary>
@@ -633,6 +640,137 @@ namespace MyNote.View
 		{
 			
 		}
-		
+		#region 2022/02/28 加密设置
+		/// <summary>
+		/// 设置笔记本加密
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		void OnNoteBookSettingEvt(object sender, EventArgs e)
+		{
+			if(mCurrentBook == null) return;
+			// 设置加密
+			NoteBookCryptDialog dialog = new NoteBookCryptDialog();
+			dialog.OnInitDialog(this.mCurrentBook.CryptFlag, this.mCurrentBook.CryptKey);
+			if(dialog.ShowDialog() == DialogResult.OK)
+			{
+				if(dialog.CryptFlag)
+				{
+					// 秘钥没有变化就不执行下面的操作
+					if(mCurrentBook.CryptFlag && dialog.CryptKey.Equals(mCurrentBook.CryptKey))
+						return;
+					mCurrentBook.CryptFlag = dialog.CryptFlag;
+					this.OnNoteBookEncode(dialog.CryptKey);
+				}else
+				{
+					mCurrentBook.CryptFlag = dialog.CryptFlag;
+					this.OnNoteBookDecode(dialog.CryptKey);
+				}
+			}
+		}
+		/// <summary>
+		/// 对全部笔记进行加密
+		/// </summary>
+		/// <param name="key"></param>
+		void OnNoteBookEncode(string key)
+		{
+			// 拿到节点的根路径，方便删除全部的节点文件
+			string root_path;
+			string book_name;
+			if(!GetCurrentNoteBookPath(out root_path, out book_name))
+			{
+				return;
+			}
+			string fileRootpath = Path.Combine(root_path, book_name);
+			string filename;
+			byte[] crypted = null;
+			
+			foreach (var element in mNoteNodes.Values) 
+			{	
+
+				filename = Path.Combine(fileRootpath, element.FileName);
+				if(!File.Exists(filename))
+				{
+					continue;
+				}
+				crypted = null;
+				// 读取文件内容
+				using (FileStream fs = new FileStream(filename, FileMode.Open))
+				{
+					int size = (int)fs.Length;
+					byte[] data = new byte[size];
+					fs.Read(data, 0, size);
+					// 先判断是否需要解密，先用旧的密钥进行解密
+					if(size > Const.CRYPT_HEAD.Length)
+					{
+						if(Utils.StartsWith(data, Const.CRYPT_HEAD))
+						{
+							data = Utils.Decode(data, Const.CRYPT_HEAD.Length, data.Length, mCurrentBook.CryptKey);
+						}
+					}
+					crypted = Utils.Encode(data, key);
+				}
+				using (FileStream wfs = new FileStream(filename, FileMode.Create))
+				{
+					wfs.Write(Const.CRYPT_HEAD, 0, Const.CRYPT_HEAD.Length);
+					wfs.Write(crypted, 0, crypted.Length);
+				}
+			}
+			mCurrentBook.CryptKey = key;
+			mCurrentBook.Save();
+		}
+		/// <summary>
+		/// 对全部笔记内容进行解密
+		/// </summary>
+		/// <param name="key"></param>
+		void OnNoteBookDecode(string key)
+		{
+			// 拿到节点的根路径，方便删除全部的节点文件
+			string root_path;
+			string book_name;
+			if(!GetCurrentNoteBookPath(out root_path, out book_name))
+			{
+				return;
+			}
+			string fileRootpath = Path.Combine(root_path, book_name);
+			string filename;
+			byte[] uncrypted = null;
+			
+			foreach (var element in mNoteNodes.Values) 
+			{	
+
+				filename = Path.Combine(fileRootpath, element.FileName);
+				if(!File.Exists(filename))
+				{
+					continue;
+				}
+				uncrypted = null;
+				// 读取文件内容
+				using (FileStream fs = new FileStream(filename, FileMode.Open))
+				{
+					int size = (int)fs.Length;
+					byte[] data = new byte[size];
+					fs.Read(data, 0, size);
+					// 先判断是否需要解密，先用旧的密钥进行解密
+					if(size > Const.CRYPT_HEAD.Length)
+					{
+						if(Utils.StartsWith(data, Const.CRYPT_HEAD))
+						{
+							data = Utils.Decode(data, Const.CRYPT_HEAD.Length, 
+							                    data.Length - Const.CRYPT_HEAD.Length, 
+							                    mCurrentBook.CryptKey);
+						}
+					}
+					uncrypted = data;
+				}
+				using (FileStream wfs = new FileStream(filename, FileMode.Create))
+				{
+					wfs.Write(uncrypted, 0, uncrypted.Length);
+				}
+			}
+			mCurrentBook.CryptKey = key;
+			mCurrentBook.Save();
+		}
 	}
+	#endregion
 }

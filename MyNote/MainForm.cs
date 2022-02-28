@@ -156,7 +156,10 @@ namespace MyNote
 			this.SaveNoteBookNoteDocument(mCurrentNode);
 			mNoteTree.SaveAllNoteBook();
 		}
-		
+		/// <summary>
+		/// 加载文档内容数据
+		/// </summary>
+		/// <param name="bkNode"></param>
 		void LoadNoteBookNoteDocument(NoteBookNode bkNode)
 		{
 			string root_path;
@@ -168,6 +171,7 @@ namespace MyNote
 			mNodeEditor.Visible = true;
 			string filename = string.Format("{0}{1}",bkNode.NodeDocumentUID, Const.NOTE_BOOK_NODE_EXT);
 			string filepath = Path.Combine(root_path, book_name, filename);
+			int content_size = 0;
 			// 文件不存在说明还没创建保存，需要等Save
 			if(File.Exists(filepath))
 			{
@@ -177,15 +181,26 @@ namespace MyNote
 					int size = (int)fs.Length;
 					byte[] data = new byte[size];
 					fs.Read(data, 0, size);
+					// 这里不管有没有设置加密都这样走，就可以防止异常
+					if(size > Const.CRYPT_HEAD.Length)
+					{
+						if(Utils.StartsWith(data, Const.CRYPT_HEAD))
+						{
+							data = Utils.Decode(data, Const.CRYPT_HEAD.Length, 
+							                    data.Length-Const.CRYPT_HEAD.Length, 
+							                    mNoteTree.CurrentBook.CryptKey);
+						}
+					}
 					// TODO 这里后续要加解密步骤
 					UTF8Encoding con = new UTF8Encoding();
 	     			mNodeEditor.SetContent(con.GetString(data));
+	     			content_size = data.Length;
 				}
 			}else
 			{
 				mNodeEditor.SetContent(""); //必须清理，否则会导致存储问题
 			}
-			string label = string.Format("更新:{0}", bkNode.NodeModifyTime.ToLocalTime());
+			string label = string.Format("大小:{0:0.00}KB 更新:{1}", content_size/1024.0, bkNode.NodeModifyTime.ToLocalTime());
 			mNodeEditor.SetDocumentInfo(bkNode.NodeName, label);
 		}
 		
@@ -215,6 +230,12 @@ namespace MyNote
 			{
 				UTF8Encoding con = new UTF8Encoding();
 				byte[] data = con.GetBytes(content);
+				// 需要加密
+				if(mNoteTree.CurrentBook.CryptFlag)
+				{
+					data = Utils.Encode(data, mNoteTree.CurrentBook.CryptKey);
+					fs.Write(Const.CRYPT_HEAD, 0, Const.CRYPT_HEAD.Length);
+				}
 				fs.Write(data, 0, data.Length);
 			}
 			// 更新内容保存
@@ -250,10 +271,32 @@ namespace MyNote
 				mNodeEditor.Height = mSplitCtrl.Panel2.Height;
 			}
 		}
+		/// <summary>
+		/// 窗口正触发关闭时回调
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		void OnWindowClosing(object sender, FormClosingEventArgs e)
 		{
+			// 所有的关闭事件都会来这里，需要判断一下，只有用户行为才托盘，其他情况都需要直接关闭例如关机。
+			if(e.CloseReason == CloseReason.UserClosing)
+			{
+				if(mRuntimeData.close_on_notify_icon)
+				{
+					this.OnNotifyIconHandler(this, null);
+					e.Cancel = true;
+				}
+			}
+		}
+		/// <summary>
+		/// 窗口已经执行关闭
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		void OnWindowClosed(object sender, FormClosedEventArgs e)
+		{
 			// 非用户行为关闭程序，则直接关闭程序
-			if(e.CloseReason != CloseReason.UserClosing)
+			//if(e.CloseReason != CloseReason.UserClosing)
 			{
 				//数据存储
 				this.SaveRuntimeData();
@@ -264,11 +307,9 @@ namespace MyNote
 				mNoteTree.SaveAllNoteBook();
 				// 取消快捷键注册
 				this.OnUnregisterHotKey();
-				return;
 			}
-			this.OnNotifyIconHandler(this, null);
-			e.Cancel = true;
 		}
+		
 		
 		void OnWindowShown(object sender, EventArgs e)
 		{
@@ -276,7 +317,7 @@ namespace MyNote
 			{
 				// 添加全部已打开的笔记本
 				NoteBook book = NoteBook.LoadBookFromDisk(mRuntimeData.opened_book);
-				mNoteTree.AddNoteBook(book, mRuntimeData.current_selected_node_uid);
+				mNoteTree.AddNoteBook(book);
 			}
 		}
 		
@@ -295,6 +336,8 @@ namespace MyNote
 		
 		void OnFindInAll(object sender, EventArgs e)
 		{
+			MessageBox.Show("暂时不支持，涉及解密文档", "提示");
+			return;
 			string text = mToolSearchInput.Text;
 			if(text.Length < 1)
 			{
@@ -348,6 +391,7 @@ namespace MyNote
 				mToolShowWindow.Text = "显示窗体";
 			}
 		}
+		#region 截屏相关
 		// 截图快捷键ID
 		private const int HotCaptureKeyID = 1000;
 		// 退出截图ID
@@ -357,6 +401,9 @@ namespace MyNote
 		/// </summary>
 		void OnRegisterHotKey()
 		{
+			// 如果不需要截屏，就不要注册
+			if(!mRuntimeData.screen_capture) return;
+			
 			if(!Win32Api.RegisterHotKey(this.Handle, HotCaptureKeyID, KeyModifiers.Ctrl|KeyModifiers.Alt, Keys.A))
 			{
 				MessageBox.Show("注册截图热键失败", "提示");
@@ -386,6 +433,34 @@ namespace MyNote
 					break;
 			}
 			base.WndProc(ref m);
+		}
+		#endregion
+		/// <summary>
+		/// 打开设置界面
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		void OnPreferencesShowEvt(object sender, EventArgs e)
+		{
+			PreferenceDialog dialog = new PreferenceDialog();
+			dialog.InitDialogData(mRuntimeData);
+			if(dialog.ShowDialog() != DialogResult.OK)
+			{
+				return;
+			}
+			mRuntimeData.close_on_notify_icon = dialog.NotifyIcon;
+			// 截屏设置后需要对快捷键进行处理
+			if(mRuntimeData.screen_capture != dialog.ScreenCapture)
+			{
+				mRuntimeData.screen_capture = dialog.ScreenCapture;
+				if(mRuntimeData.screen_capture)
+				{
+					this.OnRegisterHotKey();
+				}else
+				{
+					this.OnUnregisterHotKey();
+				}
+			}
 		}
 	}
 }

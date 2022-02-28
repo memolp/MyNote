@@ -33,6 +33,8 @@ namespace MyNote.View
 		private System.Windows.Forms.ToolStripMenuItem mTMExpendAll;
 		private System.Windows.Forms.TabControl mTreeTabCtrl;
 		private System.Windows.Forms.ToolStripLabel mToolLabel;
+		private System.Windows.Forms.ToolStripButton NoteBookSettings;
+		private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
 		
 		/// <summary>
 		/// Disposes resources used by the control.
@@ -67,6 +69,8 @@ namespace MyNote.View
 			this.mToolNodeMoveNext = new System.Windows.Forms.ToolStripButton();
 			this.mToolNodeMoveLeft = new System.Windows.Forms.ToolStripButton();
 			this.mToolNodeMoveRight = new System.Windows.Forms.ToolStripButton();
+			this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
+			this.NoteBookSettings = new System.Windows.Forms.ToolStripButton();
 			this.mPopMenuBar = new System.Windows.Forms.ContextMenuStrip(this.components);
 			this.mTMAddChildNode = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
@@ -91,7 +95,9 @@ namespace MyNote.View
 			this.mToolNodeMovePrev,
 			this.mToolNodeMoveNext,
 			this.mToolNodeMoveLeft,
-			this.mToolNodeMoveRight});
+			this.mToolNodeMoveRight,
+			this.toolStripSeparator4,
+			this.NoteBookSettings});
 			this.mToolBar.Location = new System.Drawing.Point(0, 0);
 			this.mToolBar.Name = "mToolBar";
 			this.mToolBar.Size = new System.Drawing.Size(279, 25);
@@ -179,6 +185,22 @@ namespace MyNote.View
 			this.mToolNodeMoveRight.Size = new System.Drawing.Size(23, 22);
 			this.mToolNodeMoveRight.Text = "节点右移";
 			this.mToolNodeMoveRight.Click += new System.EventHandler(this.OnMoveToRight);
+			// 
+			// toolStripSeparator4
+			// 
+			this.toolStripSeparator4.Name = "toolStripSeparator4";
+			this.toolStripSeparator4.Size = new System.Drawing.Size(6, 25);
+			// 
+			// NoteBookSettings
+			// 
+			this.NoteBookSettings.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.NoteBookSettings.Image = ((System.Drawing.Image)(resources.GetObject("NoteBookSettings.Image")));
+			this.NoteBookSettings.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.NoteBookSettings.Name = "NoteBookSettings";
+			this.NoteBookSettings.Size = new System.Drawing.Size(23, 22);
+			this.NoteBookSettings.Text = "笔记本设置";
+			this.NoteBookSettings.ToolTipText = "设置笔记本属性";
+			this.NoteBookSettings.Click += new System.EventHandler(this.OnNoteBookSettingEvt);
 			// 
 			// mPopMenuBar
 			// 

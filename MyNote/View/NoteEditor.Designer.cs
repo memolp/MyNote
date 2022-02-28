@@ -394,9 +394,9 @@ namespace MyNote.View
 			this.mDocumentInfoLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
 			this.mDocumentInfoLabel.BackColor = System.Drawing.Color.Lavender;
 			this.mDocumentInfoLabel.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-			this.mDocumentInfoLabel.Location = new System.Drawing.Point(531, 0);
+			this.mDocumentInfoLabel.Location = new System.Drawing.Point(394, 0);
 			this.mDocumentInfoLabel.Name = "mDocumentInfoLabel";
-			this.mDocumentInfoLabel.Size = new System.Drawing.Size(180, 23);
+			this.mDocumentInfoLabel.Size = new System.Drawing.Size(317, 23);
 			this.mDocumentInfoLabel.TabIndex = 2;
 			this.mDocumentInfoLabel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
 			// 

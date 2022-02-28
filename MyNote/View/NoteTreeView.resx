@@ -192,6 +192,20 @@
         BsA0YMPIgCwDQBgGaOcCdIBNMwjADSAEcBoMpckGQ96A//8BWtCdoNHy1k4AAAAASUVORK5CYII=
 </value>
   </data>
+  <data name="NoteBookSettings.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
+        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAG1SURBVFhH7ZaxTsMwEIYjBp4B3gDsipWBhYUiMcOOhMQD
+        NLaEWMrOA4CEeAGWikrMnagdsXYBIXWBhQXeAO6SPzRFceskjaCon3RSer7788eu4wRzQyuSu6FZP9NW
+        dCl6juhyDdeibTboSBxoKz8LBfWgvRrJU+fcwCO4FzLlUFY2UzG6HtIUH2MoFxWJFWXEiTLyI9PXxHBx
+        qFl9CxlxiPRUqO8uY0AhXRx6kg5Ehkh5wWZHxmUH6eIk/2wWEj2kvAiN3E4NFO0dY2HgVw0o09hwGeAb
+        TItKBrSRNyOBcRFlxf34mE+IHr2UNiExGW3EebaZtuBryzR2MMx7nF5IWXH/UH25BRk3tIff4mIrB6GV
+        R6cPa6sYiuE9zq9Y3xgtY2zgFjJu0uJSa+eAHybWNOIdKTd1GMjOAlJu5sZAeyCWqeaZpvep3Q6WkM6l
+        FgO6n/lIoWukc1kY+J8GQiv201q+RjqXWgwwdGZc0tlwgZ9OajPgy3wZoI/IRy6kqX2htRVIl4Y1WCvW
+        JG2k3fw8jmcapI3bTIaO3OtcgQrBmpD3Q5vGHjVdJetXPmIN0oLsXyMIvgD94/33pUmY+AAAAABJRU5E
+        rkJggg==
+</value>
+  </data>
   <metadata name="mPopMenuBar.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>118, 17</value>
   </metadata>

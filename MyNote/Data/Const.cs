@@ -29,6 +29,12 @@ namespace MyNote.Data
 		/// 笔记本节点内容存储文件后缀
 		/// </summary>
 		public static string NOTE_BOOK_NODE_EXT = ".mnode";
+		/// <summary>
+		/// 笔记本软件自身的加密密钥-不要再修改，否则旧的笔记本打不开。
+		/// </summary>
+		public static string NOTE_APP_KEY = "xJJMGt4VeTpJFD42rJMjQ1GkC1qQ9Wmc3L8dARpt";
+		
+		public static byte[] CRYPT_HEAD = {95, 81, 73, 78, 71, 70, 75};
 		
 		static string NOTE_RUNTIME_DATA_ = string.Empty;
 		public static string NOTE_RUNTIME_DATA

@@ -36,6 +36,21 @@ namespace MyNote.Data
 		/// 内容根节点
 		/// </summary>
 		public List<NoteBookNode> BookNotes = new List<NoteBookNode>();
+		/// <summary>
+		/// 当前选中的节点
+		/// </summary>
+		[OptionalFieldAttribute]
+		public string CurrentNodeUID = string.Empty;
+		/// <summary>
+		/// 标记加密
+		/// </summary>
+		[OptionalFieldAttribute]
+		public bool CryptFlag = false;
+		/// <summary>
+		/// 加密用的秘钥 - 这个密钥已经经过了加密
+		/// </summary>
+		[OptionalFieldAttribute]
+		public string CryptKey = string.Empty;
 		
 		public NoteBook()
 		{
@@ -201,9 +216,17 @@ namespace MyNote.Data
 			IFormatter formatter = new BinaryFormatter();
 			using(FileStream fs = new FileStream(this.BookPath, FileMode.OpenOrCreate))
 			{
+				string temp_key = this.CryptKey;
+				// 存储前先把密码进行加密，当然内存中的密码还算可以找到的。
+				if(!string.IsNullOrEmpty(this.CryptKey))
+				{
+					string crypted = Utils.EncodeString(this.CryptKey, Const.NOTE_APP_KEY);
+					this.CryptKey = crypted;
+				}
 				formatter.Serialize(fs, this);
+				this.CryptKey = temp_key;
 			}
-		}
+		}		
 		/// <summary>
 		/// 创建笔记本
 		/// </summary>
@@ -232,6 +255,11 @@ namespace MyNote.Data
 			{
 				NoteBook book = (NoteBook)formatter.Deserialize(fs);
 				book.BookPath = path; // 修复移动笔记本位置后，绝对路径问题。
+				if(!string.IsNullOrEmpty(book.CryptKey))
+				{
+					// 加载回来需要处理密钥
+					book.CryptKey = Utils.DecodeString(book.CryptKey, Const.NOTE_APP_KEY);
+				}
 				return book;
 			}
 		}

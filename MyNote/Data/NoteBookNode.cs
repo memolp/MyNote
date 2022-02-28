@@ -42,6 +42,9 @@ namespace MyNote.Data
 		public DateTime NodeCreateTime;
 		[OptionalFieldAttribute]
 		public DateTime NodeModifyTime;
+		[OptionalFieldAttribute]
+		public NoteBookNode Parent;
+		
 		/// <summary>
 		/// 创建指定名称的NoteBookNode节点，会自动生成UUID
 		/// </summary>

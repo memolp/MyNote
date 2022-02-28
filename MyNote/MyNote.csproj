@@ -83,6 +83,7 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Utils.cs" />
     <Compile Include="View\CaptureFrame.cs" />
     <Compile Include="View\CaptureFrame.Designer.cs">
       <DependentUpon>CaptureFrame.cs</DependentUpon>
@@ -103,6 +104,10 @@
     <Compile Include="View\MarkDownInputDialog.Designer.cs">
       <DependentUpon>MarkDownInputDialog.cs</DependentUpon>
     </Compile>
+    <Compile Include="View\NoteBookCryptDialog.cs" />
+    <Compile Include="View\NoteBookCryptDialog.Designer.cs">
+      <DependentUpon>NoteBookCryptDialog.cs</DependentUpon>
+    </Compile>
     <Compile Include="View\NoteEditor.cs" />
     <Compile Include="View\NoteEditor.Designer.cs">
       <DependentUpon>NoteEditor.cs</DependentUpon>
@@ -111,6 +116,11 @@
     <Compile Include="View\NoteTreeView.Designer.cs">
       <DependentUpon>NoteTreeView.cs</DependentUpon>
     </Compile>
+    <Compile Include="View\PreferenceDialog.cs" />
+    <Compile Include="View\PreferenceDialog.Designer.cs">
+      <DependentUpon>PreferenceDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\TreeNodeEx.cs" />
     <Compile Include="Win32Api.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -129,8 +139,14 @@
     <EmbeddedResource Include="View\MarkDownInputDialog.resx">
       <DependentUpon>MarkDownInputDialog.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="View\NoteBookCryptDialog.resx">
+      <DependentUpon>NoteBookCryptDialog.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="View\NoteTreeView.resx">
       <DependentUpon>NoteTreeView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\PreferenceDialog.resx">
+      <DependentUpon>PreferenceDialog.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="app.config" />
     <EmbeddedResource Include="note.html">
@@ -143,6 +159,7 @@
     <None Include="prism.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="开发日记.txt" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="MainForm.resx">
