@@ -19,6 +19,9 @@ namespace MyNote.View
 		private System.Windows.Forms.GroupBox groupBox1;
 		private System.Windows.Forms.CheckBox mCaptureFlag;
 		private System.Windows.Forms.GroupBox groupBox3;
+		private System.Windows.Forms.Button button3;
+		private System.Windows.Forms.TrackBar mLockTime;
+		private System.Windows.Forms.CheckBox mAutoLockCheck;
 		
 		/// <summary>
 		/// Disposes resources used by the form.
@@ -47,7 +50,11 @@ namespace MyNote.View
 			this.groupBox1 = new System.Windows.Forms.GroupBox();
 			this.mCaptureFlag = new System.Windows.Forms.CheckBox();
 			this.groupBox3 = new System.Windows.Forms.GroupBox();
+			this.mAutoLockCheck = new System.Windows.Forms.CheckBox();
+			this.mLockTime = new System.Windows.Forms.TrackBar();
+			this.button3 = new System.Windows.Forms.Button();
 			this.groupBox1.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.mLockTime)).BeginInit();
 			this.SuspendLayout();
 			// 
 			// button1
@@ -85,6 +92,9 @@ namespace MyNote.View
 			// 
 			// groupBox1
 			// 
+			this.groupBox1.Controls.Add(this.button3);
+			this.groupBox1.Controls.Add(this.mLockTime);
+			this.groupBox1.Controls.Add(this.mAutoLockCheck);
 			this.groupBox1.Controls.Add(this.mCaptureFlag);
 			this.groupBox1.Controls.Add(this.mOnSystemIcon);
 			this.groupBox1.Location = new System.Drawing.Point(12, 12);
@@ -114,6 +124,35 @@ namespace MyNote.View
 			this.groupBox3.TabStop = false;
 			this.groupBox3.Text = "同步功能";
 			// 
+			// mAutoLockCheck
+			// 
+			this.mAutoLockCheck.Location = new System.Drawing.Point(16, 71);
+			this.mAutoLockCheck.Name = "mAutoLockCheck";
+			this.mAutoLockCheck.Size = new System.Drawing.Size(104, 24);
+			this.mAutoLockCheck.TabIndex = 2;
+			this.mAutoLockCheck.Text = "自动锁定窗口";
+			this.mAutoLockCheck.UseVisualStyleBackColor = true;
+			// 
+			// mLockTime
+			// 
+			this.mLockTime.Location = new System.Drawing.Point(112, 71);
+			this.mLockTime.Minimum = 1;
+			this.mLockTime.Name = "mLockTime";
+			this.mLockTime.Size = new System.Drawing.Size(183, 45);
+			this.mLockTime.TabIndex = 3;
+			this.mLockTime.TickStyle = System.Windows.Forms.TickStyle.TopLeft;
+			this.mLockTime.Value = 1;
+			// 
+			// button3
+			// 
+			this.button3.Location = new System.Drawing.Point(301, 71);
+			this.button3.Name = "button3";
+			this.button3.Size = new System.Drawing.Size(75, 23);
+			this.button3.TabIndex = 4;
+			this.button3.Text = "设置密码";
+			this.button3.UseVisualStyleBackColor = true;
+			this.button3.Click += new System.EventHandler(this.OnSetUnLockPasswdEvt);
+			// 
 			// PreferenceDialog
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -128,6 +167,8 @@ namespace MyNote.View
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
 			this.Text = "设置界面";
 			this.groupBox1.ResumeLayout(false);
+			this.groupBox1.PerformLayout();
+			((System.ComponentModel.ISupportInitialize)(this.mLockTime)).EndInit();
 			this.ResumeLayout(false);
 
 		}

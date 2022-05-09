@@ -25,6 +25,18 @@ namespace MyNote.View
 		/// 系统托盘
 		/// </summary>
 		public bool NotifyIcon {set; get;}
+		/// <summary>
+		/// 是否自动锁定窗口
+		/// </summary>
+		public bool AutoLockWindow {set; get;}
+		/// <summary>
+		/// 检查自动锁定的时间
+		/// </summary>
+		public int AutoLockTime {set; get;}
+		/// <summary>
+		/// 解锁密码
+		/// </summary>
+		public string UnlockPassword{set;get;}
 		
 		public PreferenceDialog()
 		{
@@ -39,6 +51,9 @@ namespace MyNote.View
 		{
 			mCaptureFlag.Checked = data.screen_capture;
 			mOnSystemIcon.Checked = data.close_on_notify_icon;
+			mAutoLockCheck.Checked = data.auto_lock_window;
+			mLockTime.Value = data.auto_lock_time > 1? data.auto_lock_time : 1;
+			this.UnlockPassword = data.unlock_password;
 		}
 		
 		/// <summary>
@@ -50,6 +65,8 @@ namespace MyNote.View
 		{
 			this.ScreenCapture = mCaptureFlag.Checked;
 			this.NotifyIcon = mOnSystemIcon.Checked;
+			this.AutoLockWindow = mAutoLockCheck.Checked;
+			this.AutoLockTime = mLockTime.Value;
 			this.DialogResult = DialogResult.OK;
 		}
 		/// <summary>
@@ -60,6 +77,20 @@ namespace MyNote.View
 		void OnCancelEvt(object sender, EventArgs e)
 		{
 			this.Close();
+		}
+		/// <summary>
+		/// 设置密码
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		void OnSetUnLockPasswdEvt(object sender, EventArgs e)
+		{
+			InputPasswordDialog dlg = new InputPasswordDialog(this.UnlockPassword);
+			dlg.Owner = this;
+			if(dlg.ShowDialog() == DialogResult.OK)
+			{
+				this.UnlockPassword = dlg.NewPassword;
+			}
 		}
 	}
 }

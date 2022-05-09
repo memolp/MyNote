@@ -38,6 +38,7 @@ namespace MyNote
 			mNoteTree.onNodeSelected = this.OnTreeViewNodeSelected;
 			mNodeEditor.onEditorSave = this.OnEditorSaveEvent;
 			mFindResultDlg.onResultItemClick = this.OnSelectTreeViewNode;
+			mLockPanel.BringToFront();
 		}
 		/// <summary>
 		/// 窗体加载的时候调用
@@ -51,6 +52,12 @@ namespace MyNote
 			this.SetBounds(this.Left, this.Top, mRuntimeData.last_frame_width, mRuntimeData.last_frame_height);
 			// 注册全局快捷键
 			this.OnRegisterHotKey();
+			// 解锁界面
+			if(mRuntimeData.auto_lock_window)
+			{
+				mLockPanel.Visible = true;
+			}
+			mCheckTimer.Start();
 		}
 		void LoadRuntimeData()
 		{
@@ -298,6 +305,7 @@ namespace MyNote
 			// 非用户行为关闭程序，则直接关闭程序
 			//if(e.CloseReason != CloseReason.UserClosing)
 			{
+				mCheckTimer.Stop();
 				//数据存储
 				this.SaveRuntimeData();
 				if(mCurrentNode != null)
@@ -418,6 +426,7 @@ namespace MyNote
 		}
 		
 		private const int WM_HOTKEY = 0x0312;
+		private DateTime _lastMsgDate = DateTime.Now;
 		protected override void WndProc(ref Message m)
 		{
 			switch(m.Msg)
@@ -432,6 +441,7 @@ namespace MyNote
 					}
 					break;
 			}
+			_lastMsgDate = DateTime.Now;
 			base.WndProc(ref m);
 		}
 		#endregion
@@ -461,6 +471,43 @@ namespace MyNote
 					this.OnUnregisterHotKey();
 				}
 			}
+			mRuntimeData.auto_lock_time = dialog.AutoLockTime;
+			mRuntimeData.auto_lock_window = dialog.AutoLockWindow;
+			mRuntimeData.unlock_password = dialog.UnlockPassword;
+		}
+		
+		void OnUnlockEvt(object sender, EventArgs e)
+		{
+			if(mUnlockPassword.Text != mRuntimeData.unlock_password)
+			{
+				MessageBox.Show("解锁密码验证失败");
+				return;
+			}
+			mUnlockPassword.Text = "";
+			mLockPanel.Visible = false;
+		}
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		void OnCheckLockTimer(object sender, EventArgs e)
+		{
+			if(!mRuntimeData.auto_lock_window) return;
+            if(mLockPanel.Visible) return;
+            if((DateTime.Now - _lastMsgDate).Minutes >= mRuntimeData.auto_lock_time)
+            {
+            	mLockPanel.Visible = true;
+            }
+		}
+		/// <summary>
+		/// 锁定
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		void OnLockWindowEvt(object sender, EventArgs e)
+		{
+			mLockPanel.Visible = true;
 		}
 	}
 }

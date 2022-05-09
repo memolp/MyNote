@@ -7,6 +7,7 @@
  * To change this template use Tools | Options | Coding | Edit Standard Headers.
  */
 using System;
+using System.Diagnostics;
 using System.Windows.Forms;
 
 namespace MyNote
@@ -24,6 +25,14 @@ namespace MyNote
 		{
 			Application.EnableVisualStyles();
 			Application.SetCompatibleTextRenderingDefault(false);
+			// 检查是否已经运行了程序
+			Process currentProcess = Process.GetCurrentProcess();
+            var process_list = Process.GetProcessesByName(currentProcess.ProcessName);
+            if(process_list != null && process_list.Length > 1)
+            {
+            	MessageBox.Show("程序已运行");
+                return;
+            }
 			Application.Run(new MainForm());
 		}
 		

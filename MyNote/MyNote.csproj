@@ -100,6 +100,14 @@
     <Compile Include="View\FindResultPanel.Designer.cs">
       <DependentUpon>FindResultPanel.cs</DependentUpon>
     </Compile>
+    <Compile Include="View\InputPasswordDialog.cs" />
+    <Compile Include="View\InputPasswordDialog.Designer.cs">
+      <DependentUpon>InputPasswordDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\LockWindow.cs" />
+    <Compile Include="View\LockWindow.Designer.cs">
+      <DependentUpon>LockWindow.cs</DependentUpon>
+    </Compile>
     <Compile Include="View\MarkDownInputDialog.cs" />
     <Compile Include="View\MarkDownInputDialog.Designer.cs">
       <DependentUpon>MarkDownInputDialog.cs</DependentUpon>
@@ -135,6 +143,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="View\FindResultPanel.resx">
       <DependentUpon>FindResultPanel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\InputPasswordDialog.resx">
+      <DependentUpon>InputPasswordDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\LockWindow.resx">
+      <DependentUpon>LockWindow.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="View\MarkDownInputDialog.resx">
       <DependentUpon>MarkDownInputDialog.cs</DependentUpon>

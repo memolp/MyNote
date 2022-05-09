@@ -44,6 +44,21 @@ namespace MyNote.Data
 		[OptionalFieldAttribute]
 		public bool screen_capture = false;
 		
+		/// <summary>
+		/// 是否自动锁定窗口
+		/// </summary>
+		[OptionalFieldAttribute]
+		public bool auto_lock_window = false;
+		/// <summary>
+		/// 多久无操作就锁定 - 单位分钟
+		/// </summary>
+		[OptionalFieldAttribute]
+		public int auto_lock_time = 5;
+		/// <summary>
+		/// 解锁密码
+		/// </summary>
+		[OptionalFieldAttribute]
+		public string unlock_password = "";
 		
 		public MyNoteData()
 		{

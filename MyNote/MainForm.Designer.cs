@@ -45,6 +45,12 @@ namespace MyNote
 		private System.Windows.Forms.ToolStripMenuItem mToolNotifyIcon;
 		private System.Windows.Forms.ToolStripMenuItem toolsToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem preferencesToolStripMenuItem;
+		private System.Windows.Forms.Panel mLockPanel;
+		private System.Windows.Forms.Label label1;
+		private System.Windows.Forms.TextBox mUnlockPassword;
+		private System.Windows.Forms.Button mUnlockButton;
+		private System.Windows.Forms.Timer mCheckTimer;
+		private System.Windows.Forms.ToolStripMenuItem mToolLockWindow;
 		
 		/// <summary>
 		/// Disposes resources used by the form.
@@ -98,8 +104,14 @@ namespace MyNote
 			this.preferencesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.mNotifyMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
 			this.mToolShowWindow = new System.Windows.Forms.ToolStripMenuItem();
+			this.mToolLockWindow = new System.Windows.Forms.ToolStripMenuItem();
 			this.mTMQuitApp = new System.Windows.Forms.ToolStripMenuItem();
 			this.mNotifyIcon = new System.Windows.Forms.NotifyIcon(this.components);
+			this.mLockPanel = new System.Windows.Forms.Panel();
+			this.label1 = new System.Windows.Forms.Label();
+			this.mUnlockPassword = new System.Windows.Forms.TextBox();
+			this.mUnlockButton = new System.Windows.Forms.Button();
+			this.mCheckTimer = new System.Windows.Forms.Timer(this.components);
 			this.mStatusBar.SuspendLayout();
 			this.mToolBar.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.mSplitCtrl)).BeginInit();
@@ -108,6 +120,7 @@ namespace MyNote
 			this.mSplitCtrl.SuspendLayout();
 			this.mSysMenu.SuspendLayout();
 			this.mNotifyMenu.SuspendLayout();
+			this.mLockPanel.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// mStatusBar
@@ -116,7 +129,7 @@ namespace MyNote
 			this.mStatusLabel});
 			this.mStatusBar.Location = new System.Drawing.Point(0, 746);
 			this.mStatusBar.Name = "mStatusBar";
-			this.mStatusBar.Size = new System.Drawing.Size(1024, 22);
+			this.mStatusBar.Size = new System.Drawing.Size(1038, 22);
 			this.mStatusBar.TabIndex = 1;
 			this.mStatusBar.Text = "状态栏";
 			// 
@@ -124,7 +137,7 @@ namespace MyNote
 			// 
 			this.mStatusLabel.Name = "mStatusLabel";
 			this.mStatusLabel.Size = new System.Drawing.Size(149, 17);
-			this.mStatusLabel.Text = "当前版本2.1 - 作者:覃贵锋";
+			this.mStatusLabel.Text = "当前版本2.2 - 作者:覃贵锋";
 			// 
 			// mToolBar
 			// 
@@ -137,7 +150,7 @@ namespace MyNote
 			this.mToolSearch});
 			this.mToolBar.Location = new System.Drawing.Point(0, 25);
 			this.mToolBar.Name = "mToolBar";
-			this.mToolBar.Size = new System.Drawing.Size(1024, 25);
+			this.mToolBar.Size = new System.Drawing.Size(1038, 25);
 			this.mToolBar.TabIndex = 2;
 			this.mToolBar.Text = "工具栏";
 			// 
@@ -221,8 +234,8 @@ namespace MyNote
 			// 
 			this.mSplitCtrl.Panel2.Controls.Add(this.mFindResultDlg);
 			this.mSplitCtrl.Panel2.Controls.Add(this.mNodeEditor);
-			this.mSplitCtrl.Size = new System.Drawing.Size(1024, 696);
-			this.mSplitCtrl.SplitterDistance = 300;
+			this.mSplitCtrl.Size = new System.Drawing.Size(1038, 696);
+			this.mSplitCtrl.SplitterDistance = 304;
 			this.mSplitCtrl.TabIndex = 0;
 			this.mSplitCtrl.TabStop = false;
 			// 
@@ -232,7 +245,7 @@ namespace MyNote
 			this.mNoteTree.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.mNoteTree.Location = new System.Drawing.Point(0, 0);
 			this.mNoteTree.Name = "mNoteTree";
-			this.mNoteTree.Size = new System.Drawing.Size(300, 696);
+			this.mNoteTree.Size = new System.Drawing.Size(304, 696);
 			this.mNoteTree.TabIndex = 0;
 			this.mNoteTree.TabStop = false;
 			// 
@@ -243,7 +256,7 @@ namespace MyNote
 			this.mFindResultDlg.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
 			this.mFindResultDlg.Location = new System.Drawing.Point(0, 521);
 			this.mFindResultDlg.Name = "mFindResultDlg";
-			this.mFindResultDlg.Size = new System.Drawing.Size(720, 172);
+			this.mFindResultDlg.Size = new System.Drawing.Size(730, 172);
 			this.mFindResultDlg.TabIndex = 1;
 			this.mFindResultDlg.TabStop = false;
 			this.mFindResultDlg.Visible = false;
@@ -257,7 +270,7 @@ namespace MyNote
 			this.mNodeEditor.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
 			this.mNodeEditor.Location = new System.Drawing.Point(0, 0);
 			this.mNodeEditor.Name = "mNodeEditor";
-			this.mNodeEditor.Size = new System.Drawing.Size(720, 515);
+			this.mNodeEditor.Size = new System.Drawing.Size(730, 515);
 			this.mNodeEditor.TabIndex = 0;
 			this.mNodeEditor.TabStop = false;
 			// 
@@ -269,7 +282,7 @@ namespace MyNote
 			this.toolsToolStripMenuItem});
 			this.mSysMenu.Location = new System.Drawing.Point(0, 0);
 			this.mSysMenu.Name = "mSysMenu";
-			this.mSysMenu.Size = new System.Drawing.Size(1024, 25);
+			this.mSysMenu.Size = new System.Drawing.Size(1038, 25);
 			this.mSysMenu.TabIndex = 4;
 			this.mSysMenu.Text = "菜单栏";
 			// 
@@ -361,9 +374,10 @@ namespace MyNote
 			// 
 			this.mNotifyMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
 			this.mToolShowWindow,
+			this.mToolLockWindow,
 			this.mTMQuitApp});
 			this.mNotifyMenu.Name = "mNotifyMenu";
-			this.mNotifyMenu.Size = new System.Drawing.Size(125, 48);
+			this.mNotifyMenu.Size = new System.Drawing.Size(125, 70);
 			// 
 			// mToolShowWindow
 			// 
@@ -371,6 +385,13 @@ namespace MyNote
 			this.mToolShowWindow.Size = new System.Drawing.Size(124, 22);
 			this.mToolShowWindow.Text = "显示窗体";
 			this.mToolShowWindow.Click += new System.EventHandler(this.OnNotifyIconHandler);
+			// 
+			// mToolLockWindow
+			// 
+			this.mToolLockWindow.Name = "mToolLockWindow";
+			this.mToolLockWindow.Size = new System.Drawing.Size(124, 22);
+			this.mToolLockWindow.Text = "锁定窗体";
+			this.mToolLockWindow.Click += new System.EventHandler(this.OnLockWindowEvt);
 			// 
 			// mTMQuitApp
 			// 
@@ -386,15 +407,75 @@ namespace MyNote
 			this.mNotifyIcon.Text = "系统托盘";
 			this.mNotifyIcon.Visible = true;
 			// 
+			// mLockPanel
+			// 
+			this.mLockPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+			| System.Windows.Forms.AnchorStyles.Left) 
+			| System.Windows.Forms.AnchorStyles.Right)));
+			this.mLockPanel.BackColor = System.Drawing.Color.Black;
+			this.mLockPanel.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("mLockPanel.BackgroundImage")));
+			this.mLockPanel.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+			this.mLockPanel.Controls.Add(this.label1);
+			this.mLockPanel.Controls.Add(this.mUnlockPassword);
+			this.mLockPanel.Controls.Add(this.mUnlockButton);
+			this.mLockPanel.Location = new System.Drawing.Point(0, 0);
+			this.mLockPanel.Name = "mLockPanel";
+			this.mLockPanel.Size = new System.Drawing.Size(1038, 746);
+			this.mLockPanel.TabIndex = 5;
+			this.mLockPanel.Visible = false;
+			// 
+			// label1
+			// 
+			this.label1.Anchor = System.Windows.Forms.AnchorStyles.Top;
+			this.label1.BackColor = System.Drawing.Color.Transparent;
+			this.label1.Font = new System.Drawing.Font("微软雅黑", 15F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+			this.label1.ForeColor = System.Drawing.Color.Aqua;
+			this.label1.Location = new System.Drawing.Point(390, 278);
+			this.label1.Name = "label1";
+			this.label1.Size = new System.Drawing.Size(254, 46);
+			this.label1.TabIndex = 3;
+			this.label1.Text = "当前窗口已锁定";
+			this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+			// 
+			// mUnlockPassword
+			// 
+			this.mUnlockPassword.Anchor = System.Windows.Forms.AnchorStyles.Top;
+			this.mUnlockPassword.Location = new System.Drawing.Point(421, 347);
+			this.mUnlockPassword.Name = "mUnlockPassword";
+			this.mUnlockPassword.Size = new System.Drawing.Size(197, 21);
+			this.mUnlockPassword.TabIndex = 5;
+			this.mUnlockPassword.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+			this.mUnlockPassword.UseSystemPasswordChar = true;
+			// 
+			// mUnlockButton
+			// 
+			this.mUnlockButton.Anchor = System.Windows.Forms.AnchorStyles.Top;
+			this.mUnlockButton.BackColor = System.Drawing.Color.DodgerBlue;
+			this.mUnlockButton.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+			this.mUnlockButton.ForeColor = System.Drawing.Color.Blue;
+			this.mUnlockButton.Location = new System.Drawing.Point(462, 383);
+			this.mUnlockButton.Name = "mUnlockButton";
+			this.mUnlockButton.Size = new System.Drawing.Size(115, 38);
+			this.mUnlockButton.TabIndex = 4;
+			this.mUnlockButton.Text = "解锁";
+			this.mUnlockButton.UseVisualStyleBackColor = false;
+			this.mUnlockButton.Click += new System.EventHandler(this.OnUnlockEvt);
+			// 
+			// mCheckTimer
+			// 
+			this.mCheckTimer.Interval = 1000;
+			this.mCheckTimer.Tick += new System.EventHandler(this.OnCheckLockTimer);
+			// 
 			// MainForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(1024, 768);
+			this.ClientSize = new System.Drawing.Size(1038, 768);
 			this.Controls.Add(this.mSplitCtrl);
 			this.Controls.Add(this.mToolBar);
 			this.Controls.Add(this.mStatusBar);
 			this.Controls.Add(this.mSysMenu);
+			this.Controls.Add(this.mLockPanel);
 			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
 			this.MainMenuStrip = this.mSysMenu;
 			this.Name = "MainForm";
@@ -416,6 +497,8 @@ namespace MyNote
 			this.mSysMenu.ResumeLayout(false);
 			this.mSysMenu.PerformLayout();
 			this.mNotifyMenu.ResumeLayout(false);
+			this.mLockPanel.ResumeLayout(false);
+			this.mLockPanel.PerformLayout();
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
