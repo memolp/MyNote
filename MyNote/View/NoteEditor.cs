@@ -498,6 +498,7 @@ namespace MyNote.View
 		{
 			RefreshToolBar();
 		}
+		private HtmlElement _select_image_ele = null;
 		/// <summary>
 		/// 点击
 		/// </summary>
@@ -507,10 +508,22 @@ namespace MyNote.View
 		{
 			RefreshToolBar();
 			
+			HtmlElement ele = mWebBrowser.Document.GetElementFromPoint(e.MousePosition);
+			if(ele == null) return;
+			// 如果点击了图片
+			if(ele.DomElement is mshtml.HTMLImgClass)
+			{
+				_select_image_ele = ele; // 设置图片
+				mScaleMenuStrip.Show(this.PointToScreen(e.MousePosition));
+				return;
+			}else
+			{
+				_select_image_ele = null;
+			}
+				
 			if(e.CtrlKeyPressed)
 			{
-				HtmlElement ele = mWebBrowser.Document.GetElementFromPoint(e.MousePosition);
-				if(ele != null)
+				//if(ele.DomElement is mshtml.HTMLLinkElementClass)
 				{
 					string url = ele.InnerText;
 					if(url.StartsWith("http"))
@@ -533,7 +546,11 @@ namespace MyNote.View
 				}
 			}
 		}
-		
+		/// <summary>
+		/// 插入换行
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		void OnInsertEnterEvent(object sender, EventArgs e)
 		{
 			mWebBrowser.Document.InvokeScript("js_append_html", new string[]{"<br>"});
@@ -554,6 +571,35 @@ namespace MyNote.View
 					element.SetAttribute("src", base64);
 				}
 			}
+		}
+		
+		void OnScaleItemCheckedEvt(object sender, ToolStripItemClickedEventArgs e)
+		{
+			if(_select_image_ele == null) return;
+			var name = e.ClickedItem.Text;
+			mshtml.HTMLImgClass img = (mshtml.HTMLImgClass)_select_image_ele.DomElement;
+			//img.setAttribute("width", name);
+			//img.setAttribute("height", name);
+			double b = Convert.ToDouble(name.TrimEnd('%'));
+			img.width = (int)(img.width * b / 100);
+			//_select_image_ele.SetAttribute("style", "max-width:10px;max-height:10px");
+//			if(e.KeyCode == Keys.Add && _select_image_ele != null)
+//			{
+//				mshtml.HTMLImgClass img = (mshtml.HTMLImgClass)_select_image_ele.DomElement;
+//				img.width = (int)(img.width * 1.1);
+//				return;
+//			}
+//			if(e.KeyCode == Keys.Subtract && _select_image_ele != null)
+//			{
+//				mshtml.HTMLImgClass img = (mshtml.HTMLImgClass)_select_image_ele.DomElement;
+//				img.width = (int)(img.width * 0.9);
+//				return;
+//			}
+		}
+		
+		void OnMenuStripClosingEvt(object sender, ToolStripDropDownClosingEventArgs e)
+		{
+			_select_image_ele = null;
 		}
 		/// <summary>
 		/// 将图片URL转成Base64
@@ -813,6 +859,7 @@ namespace MyNote.View
             }
             return mode;
         }
+		
 		#endregion		
 	}
 }

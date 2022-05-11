@@ -18,10 +18,6 @@ namespace MyNote.Data
 	public static class Const
 	{
 		/// <summary>
-		/// 记录笔记本根路径
-		/// </summary>
-		public static string NOTE_BOOK_PATH = "NoteBooks";
-		/// <summary>
 		/// 笔记本文件的后缀
 		/// </summary>
 		public static string NOTE_BOOK_EXT = ".mnote";

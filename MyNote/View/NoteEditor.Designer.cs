@@ -46,6 +46,16 @@ namespace MyNote.View
 		private System.Windows.Forms.ToolStripButton enterToolBar;
 		private System.Windows.Forms.Panel panel1;
 		private System.Windows.Forms.Label mDocumentTitleLabel;
+		private System.Windows.Forms.ContextMenuStrip mScaleMenuStrip;
+		private System.Windows.Forms.ToolStripMenuItem mMenuItemScale;
+		private System.Windows.Forms.ToolStripMenuItem mMenuItemScale100;
+		private System.Windows.Forms.ToolStripMenuItem mMenuItemScale70;
+		private System.Windows.Forms.ToolStripMenuItem mMenuItemScale50;
+		private System.Windows.Forms.ToolStripMenuItem mMenuItemScale30;
+		private System.Windows.Forms.ToolStripMenuItem mMenuItemScale10;
+		private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem3;
+		private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem2;
+		private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem1;
 		
 		/// <summary>
 		/// Disposes resources used by the control.
@@ -68,6 +78,7 @@ namespace MyNote.View
 		/// </summary>
 		private void InitializeComponent()
 		{
+			this.components = new System.ComponentModel.Container();
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(NoteEditor));
 			this.mToolBar = new System.Windows.Forms.ToolStrip();
 			this.mToolBold = new System.Windows.Forms.ToolStripButton();
@@ -98,10 +109,21 @@ namespace MyNote.View
 			this.toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
 			this.mToolFormatClear = new System.Windows.Forms.ToolStripButton();
 			this.mWebBrowser = new System.Windows.Forms.WebBrowser();
+			this.mScaleMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
+			this.mMenuItemScale = new System.Windows.Forms.ToolStripMenuItem();
+			this.mMenuItemScale100 = new System.Windows.Forms.ToolStripMenuItem();
+			this.mMenuItemScale70 = new System.Windows.Forms.ToolStripMenuItem();
+			this.mMenuItemScale50 = new System.Windows.Forms.ToolStripMenuItem();
+			this.mMenuItemScale30 = new System.Windows.Forms.ToolStripMenuItem();
+			this.mMenuItemScale10 = new System.Windows.Forms.ToolStripMenuItem();
 			this.mDocumentInfoLabel = new System.Windows.Forms.Label();
 			this.panel1 = new System.Windows.Forms.Panel();
 			this.mDocumentTitleLabel = new System.Windows.Forms.Label();
+			this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripMenuItem();
 			this.mToolBar.SuspendLayout();
+			this.mScaleMenuStrip.SuspendLayout();
 			this.panel1.SuspendLayout();
 			this.SuspendLayout();
 			// 
@@ -384,10 +406,65 @@ namespace MyNote.View
 			this.mWebBrowser.Location = new System.Drawing.Point(0, 50);
 			this.mWebBrowser.MinimumSize = new System.Drawing.Size(20, 20);
 			this.mWebBrowser.Name = "mWebBrowser";
+			this.mWebBrowser.ScriptErrorsSuppressed = true;
 			this.mWebBrowser.Size = new System.Drawing.Size(711, 266);
 			this.mWebBrowser.TabIndex = 1;
 			this.mWebBrowser.TabStop = false;
 			this.mWebBrowser.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.OnPreviewKeyDown);
+			// 
+			// mScaleMenuStrip
+			// 
+			this.mScaleMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+			this.mMenuItemScale});
+			this.mScaleMenuStrip.Name = "mScaleMenuStrip";
+			this.mScaleMenuStrip.Size = new System.Drawing.Size(153, 48);
+			this.mScaleMenuStrip.Closing += new System.Windows.Forms.ToolStripDropDownClosingEventHandler(this.OnMenuStripClosingEvt);
+			// 
+			// mMenuItemScale
+			// 
+			this.mMenuItemScale.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+			this.toolStripMenuItem3,
+			this.toolStripMenuItem2,
+			this.toolStripMenuItem1,
+			this.mMenuItemScale100,
+			this.mMenuItemScale70,
+			this.mMenuItemScale50,
+			this.mMenuItemScale30,
+			this.mMenuItemScale10});
+			this.mMenuItemScale.Name = "mMenuItemScale";
+			this.mMenuItemScale.Size = new System.Drawing.Size(152, 22);
+			this.mMenuItemScale.Text = "调整大小";
+			this.mMenuItemScale.DropDownItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.OnScaleItemCheckedEvt);
+			// 
+			// mMenuItemScale100
+			// 
+			this.mMenuItemScale100.Name = "mMenuItemScale100";
+			this.mMenuItemScale100.Size = new System.Drawing.Size(108, 22);
+			this.mMenuItemScale100.Text = "100%";
+			// 
+			// mMenuItemScale70
+			// 
+			this.mMenuItemScale70.Name = "mMenuItemScale70";
+			this.mMenuItemScale70.Size = new System.Drawing.Size(108, 22);
+			this.mMenuItemScale70.Text = "70%";
+			// 
+			// mMenuItemScale50
+			// 
+			this.mMenuItemScale50.Name = "mMenuItemScale50";
+			this.mMenuItemScale50.Size = new System.Drawing.Size(108, 22);
+			this.mMenuItemScale50.Text = "50%";
+			// 
+			// mMenuItemScale30
+			// 
+			this.mMenuItemScale30.Name = "mMenuItemScale30";
+			this.mMenuItemScale30.Size = new System.Drawing.Size(108, 22);
+			this.mMenuItemScale30.Text = "30%";
+			// 
+			// mMenuItemScale10
+			// 
+			this.mMenuItemScale10.Name = "mMenuItemScale10";
+			this.mMenuItemScale10.Size = new System.Drawing.Size(108, 22);
+			this.mMenuItemScale10.Text = "10%";
 			// 
 			// mDocumentInfoLabel
 			// 
@@ -423,6 +500,24 @@ namespace MyNote.View
 			this.mDocumentTitleLabel.Text = "label1";
 			this.mDocumentTitleLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			// 
+			// toolStripMenuItem1
+			// 
+			this.toolStripMenuItem1.Name = "toolStripMenuItem1";
+			this.toolStripMenuItem1.Size = new System.Drawing.Size(108, 22);
+			this.toolStripMenuItem1.Text = "120%";
+			// 
+			// toolStripMenuItem2
+			// 
+			this.toolStripMenuItem2.Name = "toolStripMenuItem2";
+			this.toolStripMenuItem2.Size = new System.Drawing.Size(108, 22);
+			this.toolStripMenuItem2.Text = "150%";
+			// 
+			// toolStripMenuItem3
+			// 
+			this.toolStripMenuItem3.Name = "toolStripMenuItem3";
+			this.toolStripMenuItem3.Size = new System.Drawing.Size(108, 22);
+			this.toolStripMenuItem3.Text = "200%";
+			// 
 			// NoteEditor
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -434,6 +529,7 @@ namespace MyNote.View
 			this.Size = new System.Drawing.Size(711, 319);
 			this.mToolBar.ResumeLayout(false);
 			this.mToolBar.PerformLayout();
+			this.mScaleMenuStrip.ResumeLayout(false);
 			this.panel1.ResumeLayout(false);
 			this.ResumeLayout(false);
 			this.PerformLayout();
