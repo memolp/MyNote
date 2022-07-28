@@ -230,5 +230,27 @@ namespace MyNote.View
 			this.OnLockEvt();
 		}
 		
+		void OnKeyDownEvt(object sender, PreviewKeyDownEventArgs e)
+		{
+			if(e.KeyCode == Keys.Enter)
+			{
+				this.OnUnlockEvt(sender, e);
+			}
+		}
+		void OnKeyPressEvt(object sender, KeyPressEventArgs e)
+		{
+			if(e.KeyChar == '\n')
+			{
+				this.OnUnlockEvt(sender, e);
+			}
+		}
+		void OnKeyUpEvt(object sender, KeyEventArgs e)
+		{
+			if(e.KeyCode == Keys.Enter)
+			{
+				this.OnUnlockEvt(sender, e);
+			}
+		}
+		
 	}
 }

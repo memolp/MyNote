@@ -509,5 +509,13 @@ namespace MyNote
 		{
 			mLockPanel.Visible = true;
 		}
+		
+		void OnUnLockKeyDownEvt(object sender, KeyEventArgs e)
+		{
+			if(e.KeyCode == Keys.Enter)
+			{
+				this.OnUnlockEvt(sender, e);
+			}
+		}
 	}
 }

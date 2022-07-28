@@ -101,12 +101,14 @@ namespace MyNote.View
 			// 
 			// mUnlockPassword
 			// 
+			this.mUnlockPassword.AcceptsReturn = true;
 			this.mUnlockPassword.Location = new System.Drawing.Point(66, 280);
 			this.mUnlockPassword.Name = "mUnlockPassword";
 			this.mUnlockPassword.Size = new System.Drawing.Size(197, 21);
 			this.mUnlockPassword.TabIndex = 2;
 			this.mUnlockPassword.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
 			this.mUnlockPassword.UseSystemPasswordChar = true;
+			this.mUnlockPassword.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.OnKeyDownEvt);
 			// 
 			// mUnlockButton
 			// 

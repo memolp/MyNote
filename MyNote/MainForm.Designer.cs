@@ -439,6 +439,7 @@ namespace MyNote
 			// 
 			// mUnlockPassword
 			// 
+			this.mUnlockPassword.AcceptsReturn = true;
 			this.mUnlockPassword.Anchor = System.Windows.Forms.AnchorStyles.Top;
 			this.mUnlockPassword.Location = new System.Drawing.Point(421, 347);
 			this.mUnlockPassword.Name = "mUnlockPassword";
@@ -446,6 +447,7 @@ namespace MyNote
 			this.mUnlockPassword.TabIndex = 5;
 			this.mUnlockPassword.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
 			this.mUnlockPassword.UseSystemPasswordChar = true;
+			this.mUnlockPassword.KeyDown += new System.Windows.Forms.KeyEventHandler(this.OnUnLockKeyDownEvt);
 			// 
 			// mUnlockButton
 			// 
