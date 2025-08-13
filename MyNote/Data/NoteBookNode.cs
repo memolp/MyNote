@@ -11,6 +11,7 @@ using System.IO;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Text;
+using MyNote.View;
 
 
 namespace MyNote.Data
@@ -53,9 +54,23 @@ namespace MyNote.Data
 		{
 			this.NodeName = name;
 			this.NodeDocumentUID = System.Guid.NewGuid().ToString();
-			NodeCreateTime = DateTime.Now;
-			NodeModifyTime = DateTime.Now;
+			this.NodeCreateTime = DateTime.Now;
+			this.NodeModifyTime = DateTime.Now;
 		}
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="name"></param>
+		/// <param name="guid"></param>
+		public NoteBookNode(NoteBookNode note)
+		{
+			this.NodeName = note.NodeName;
+			this.NodeDocumentUID = note.NodeDocumentUID;
+            this.NodeCreateTime = note.NodeCreateTime;
+            this.NodeModifyTime = note.NodeModifyTime;
+			this.NodeExpanded = note.NodeExpanded;
+			this.Parent = null;
+        }
 		public NoteBookNode GetParentNode(NoteBookNode current, NoteBookNode parent, bool remove_node)
 		{
 			NoteBookNode bknode = null;
@@ -267,5 +282,49 @@ namespace MyNote.Data
 				return _filename;
 			}
 		}
+		public string GetLocalFullFilePath(NoteBook notebook, out string rootPath)
+		{
+			// 获取存储的根路径
+			rootPath = notebook.GetNodesRoot();
+            return Path.Combine(rootPath, this.FileName);
+        }
+        /// <summary>
+        /// 保存
+        /// </summary>
+        /// <param name="noteBook"></param>
+        /// <param name="content"></param>
+        public void Save(NoteBook noteBook, string content)
+		{
+			// 获取存储的根路径
+			string filepath = GetLocalFullFilePath(noteBook, out var fileRootpath);
+            // 创建笔记本目录
+            if (!Directory.Exists(fileRootpath))
+            {
+                Directory.CreateDirectory(fileRootpath);
+            }
+            NoteBookNode.WriteToFile(noteBook, filepath, content);
+        }
+		/// <summary>
+		/// 真正写入文件的逻辑
+		/// </summary>
+		/// <param name="notebook"></param>
+		/// <param name="filepath"></param>
+		/// <param name="content"></param>
+		public static void WriteToFile(NoteBook notebook, string filepath, string content)
+		{
+            // 读取文件内容
+            using (FileStream fs = new FileStream(filepath, FileMode.Create))
+            {
+                UTF8Encoding con = new UTF8Encoding();
+                byte[] data = con.GetBytes(content);
+                // 需要加密
+                if (notebook.CryptFlag)
+                {
+                    data = Utils.Encode(data, notebook.CryptKey);
+                    fs.Write(Const.CRYPT_HEAD, 0, Const.CRYPT_HEAD.Length);
+                }
+                fs.Write(data, 0, data.Length);
+            }
+        }
 	}
 }

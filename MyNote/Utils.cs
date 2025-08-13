@@ -115,4 +115,19 @@ public static class Utils
 		}
 		return true;
 	}
+	/// <summary>
+	/// 计算文件的md5
+	/// </summary>
+	/// <param name="filePath"></param>
+	/// <returns></returns>
+    public static string GetFileMd5(string filePath)
+    {
+		using (var md5 = MD5.Create())
+		using (var stream = File.OpenRead(filePath))
+		{
+            var hashBytes = md5.ComputeHash(stream);
+            // 转成小写十六进制字符串
+            return BitConverter.ToString(hashBytes).Replace("-", "").ToLower();
+        }
+    }
 }

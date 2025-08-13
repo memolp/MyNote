@@ -11,6 +11,7 @@ using System.IO;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
+using System.Text;
 
 namespace MyNote.Data
 {
@@ -23,15 +24,15 @@ namespace MyNote.Data
 		/// <summary>
 		/// 笔记本名称
 		/// </summary>
-		public string BookName{set;get;}
+		public string BookName { set; get; }
 		/// <summary>
 		/// 唯一UUID
 		/// </summary>
-		public string BookUID{set;get;}
+		public string BookUID { set; get; }
 		/// <summary>
 		/// 完整路径
 		/// </summary>
-		public string BookPath{set; get;}
+		public string BookPath { set; get; }
 		/// <summary>
 		/// 内容根节点
 		/// </summary>
@@ -51,10 +52,20 @@ namespace MyNote.Data
 		/// </summary>
 		[OptionalFieldAttribute]
 		public string CryptKey = string.Empty;
-		
-		public NoteBook()
+		/// <summary>
+		/// 最近保存时间
+		/// </summary>
+		[OptionalField]
+        public DateTime BookSaveTime = DateTime.Now;
+		/// <summary>
+		/// 网络同步的路径
+		/// </summary>
+		[OptionalField]
+		public string sync_uuid = string.Empty;
+
+        public NoteBook()
 		{
-			
+
 		}
 		/// <summary>
 		/// 获取父节点
@@ -65,17 +76,17 @@ namespace MyNote.Data
 		public NoteBookNode GetParentNode(NoteBookNode current, bool remove_node)
 		{
 			NoteBookNode bknode = null;
-			for(int i=0; i < BookNotes.Count; i++)
+			for (int i = 0; i < BookNotes.Count; i++)
 			{
 				var node = BookNotes[i];
 				// 如果匹配到根节点
-				if(node.NodeDocumentUID == current.NodeDocumentUID)
+				if (node.NodeDocumentUID == current.NodeDocumentUID)
 				{
 					return null;
-				}else
+				} else
 				{
 					bknode = node.GetParentNode(current, node, remove_node);
-					if(bknode != null) return bknode;
+					if (bknode != null) return bknode;
 				}
 			}
 			return null;
@@ -83,23 +94,23 @@ namespace MyNote.Data
 		public NoteBookNode GetPrevNode(NoteBookNode current, bool remove_node)
 		{
 			NoteBookNode bknode = null;
-			for(int i=0; i < BookNotes.Count; i++)
+			for (int i = 0; i < BookNotes.Count; i++)
 			{
 				var node = BookNotes[i];
 				// 如果匹配到根节点
-				if(node.NodeDocumentUID == current.NodeDocumentUID)
+				if (node.NodeDocumentUID == current.NodeDocumentUID)
 				{
-					if(i == 0) return null;
+					if (i == 0) return null;
 					bknode = BookNotes[i - 1];
-					if(remove_node)
+					if (remove_node)
 					{
 						BookNotes.RemoveAt(i);
 					}
 					return bknode;
-				}else
+				} else
 				{
 					bknode = node.GetPrevNode(current, remove_node);
-					if(bknode != null) return bknode;
+					if (bknode != null) return bknode;
 				}
 			}
 			return null;
@@ -112,25 +123,25 @@ namespace MyNote.Data
 		/// <returns></returns>
 		public bool FindNodeAndSet(NoteBookNode current, bool after)
 		{
-			for(int i=0; i < BookNotes.Count; i++)
+			for (int i = 0; i < BookNotes.Count; i++)
 			{
 				var node = BookNotes[i];
 				// 如果匹配到根节点
-				if(node.NodeDocumentUID == current.NodeDocumentUID)
+				if (node.NodeDocumentUID == current.NodeDocumentUID)
 				{
-					if(after) // 后面插入
+					if (after) // 后面插入
 					{
 						BookNotes.RemoveAt(i);
 						BookNotes.Insert(i + 1, current);
-					}else  //前面插入
+					} else  //前面插入
 					{
 						BookNotes.RemoveAt(i);
 						BookNotes.Insert(i - 1, current);
 					}
 					return true;
-				}else
+				} else
 				{
-					if(node.FindNodeAndSet(current, after))
+					if (node.FindNodeAndSet(current, after))
 						return true;
 				}
 			}
@@ -145,29 +156,29 @@ namespace MyNote.Data
 		/// <returns></returns>
 		public bool FindNodeAndAdd(NoteBookNode current, NoteBookNode newNode, bool afterInsert)
 		{
-			for(int i=0; i < BookNotes.Count; i++)
+			for (int i = 0; i < BookNotes.Count; i++)
 			{
 				var node = BookNotes[i];
 				// 如果匹配到根节点
-				if(node.NodeDocumentUID == current.NodeDocumentUID)
+				if (node.NodeDocumentUID == current.NodeDocumentUID)
 				{
-					if(afterInsert) // 后面插入
+					if (afterInsert) // 后面插入
 					{
-						if(i >= BookNotes.Count)
+						if (i >= BookNotes.Count)
 						{
 							BookNotes.Add(newNode);
-						}else
+						} else
 						{
 							BookNotes.Insert(i + 1, newNode);
 						}
-					}else  //前面插入
+					} else  //前面插入
 					{
 						BookNotes.Insert(i, newNode);
 					}
 					return true;
-				}else
+				} else
 				{
-					if(node.FindNodeAndAdd(current, newNode, afterInsert))
+					if (node.FindNodeAndAdd(current, newNode, afterInsert))
 						return true;
 				}
 			}
@@ -175,17 +186,17 @@ namespace MyNote.Data
 		}
 		public bool FindNodeAndRemove(NoteBookNode current)
 		{
-			for(int i=0; i < BookNotes.Count; i++)
+			for (int i = 0; i < BookNotes.Count; i++)
 			{
 				var node = BookNotes[i];
 				// 如果匹配到根节点
-				if(node.NodeDocumentUID == current.NodeDocumentUID)
+				if (node.NodeDocumentUID == current.NodeDocumentUID)
 				{
 					BookNotes.Remove(current);
 					return true;
-				}else
+				} else
 				{
-					if(node.FindNodeAndRemove(current))
+					if (node.FindNodeAndRemove(current))
 						return true;
 				}
 			}
@@ -199,9 +210,9 @@ namespace MyNote.Data
 		public NoteBookNode FindNodeWithUUID(string uid)
 		{
 			NoteBookNode node;
-			foreach (NoteBookNode element in BookNotes) 
+			foreach (NoteBookNode element in BookNotes)
 			{
-				if(element.FindNodeWithUUID(uid, out node))
+				if (element.FindNodeWithUUID(uid, out node))
 				{
 					return node;
 				}
@@ -214,25 +225,53 @@ namespace MyNote.Data
 		public void Save()
 		{
 			IFormatter formatter = new BinaryFormatter();
-			using(FileStream fs = new FileStream(this.BookPath, FileMode.OpenOrCreate))
+			using (FileStream fs = new FileStream(this.BookPath, FileMode.OpenOrCreate))
 			{
 				string temp_key = this.CryptKey;
 				// 存储前先把密码进行加密，当然内存中的密码还算可以找到的。
-				if(!string.IsNullOrEmpty(this.CryptKey))
+				if (!string.IsNullOrEmpty(this.CryptKey))
 				{
 					string crypted = Utils.EncodeString(this.CryptKey, Const.NOTE_APP_KEY);
 					this.CryptKey = crypted;
 				}
-				formatter.Serialize(fs, this);
+				this.BookSaveTime = DateTime.Now;	// 更新最近存储时间
+                formatter.Serialize(fs, this);
 				this.CryptKey = temp_key;
 			}
-		}		
+		}
+        public byte[] GetRawContent()
+        {
+            IFormatter formatter = new BinaryFormatter();
+            using (MemoryStream ms = new MemoryStream())
+            {
+                string temp_key = this.CryptKey;
+                // 存储前先把密码进行加密，当然内存中的密码还算可以找到的。
+                if (!string.IsNullOrEmpty(this.CryptKey))
+                {
+                    string crypted = Utils.EncodeString(this.CryptKey, Const.NOTE_APP_KEY);
+                    this.CryptKey = crypted;
+                }
+                formatter.Serialize(ms, this);
+                this.CryptKey = temp_key;   // 改回来
+                return ms.GetBuffer();
+            }
+        }
 		/// <summary>
-		/// 创建笔记本
+		/// 获取存储当前笔记本内容节点的根路径
 		/// </summary>
-		/// <param name="path"></param>
 		/// <returns></returns>
-		public static NoteBook CreateBookWithPath(string path)
+		public string GetNodesRoot()
+		{
+            string root_path = Path.GetFileName(this.BookPath);
+            root_path = this.BookPath.Replace(root_path, "");
+            return Path.Combine(root_path, this.BookUID);
+        }
+        /// <summary>
+        /// 创建笔记本
+        /// </summary>
+        /// <param name="path"></param>
+        /// <returns></returns>
+        public static NoteBook CreateBookWithPath(string path)
 		{
 			NoteBook book = new NoteBook();
 			book.BookPath = path;
@@ -251,11 +290,11 @@ namespace MyNote.Data
 		public static NoteBook LoadBookFromDisk(string path)
 		{
 			IFormatter formatter = new BinaryFormatter();
-			using(FileStream fs = new FileStream(path, FileMode.Open))
+			using (FileStream fs = new FileStream(path, FileMode.Open))
 			{
 				NoteBook book = (NoteBook)formatter.Deserialize(fs);
 				book.BookPath = path; // 修复移动笔记本位置后，绝对路径问题。
-				if(!string.IsNullOrEmpty(book.CryptKey))
+				if (!string.IsNullOrEmpty(book.CryptKey))
 				{
 					// 加载回来需要处理密钥
 					book.CryptKey = Utils.DecodeString(book.CryptKey, Const.NOTE_APP_KEY);
@@ -263,5 +302,22 @@ namespace MyNote.Data
 				return book;
 			}
 		}
-	}
+
+		public static NoteBook LoadBookFromStream(byte[] bytes, string path)
+		{
+			IFormatter formatter = new BinaryFormatter();
+			using (MemoryStream ms = new MemoryStream(bytes))
+			{
+				NoteBook book = (NoteBook)formatter.Deserialize(ms);
+				book.BookPath = path;
+				if (!string.IsNullOrEmpty(book.CryptKey))
+				{
+					// 加载回来需要处理密钥
+					book.CryptKey = Utils.DecodeString(book.CryptKey, Const.NOTE_APP_KEY);
+				}
+				return book;
+			}
+		}
+		
+    }
 }

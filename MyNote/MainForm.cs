@@ -16,6 +16,7 @@ using System.Text;
 using System.Windows.Forms;
 using MyNote.Data;
 using MyNote.View;
+using System.Threading.Tasks;
 
 namespace MyNote
 {
@@ -36,6 +37,7 @@ namespace MyNote
 			// 默认先隐藏，只有选中了节点才显示
 			mNodeEditor.Visible = false;
 			mNoteTree.onNodeSelected = this.OnTreeViewNodeSelected;
+			mNoteTree.nodeBookNetAsync = this.OnNoteBookNetAsyncEvt;
 			mNodeEditor.onEditorSave = this.OnEditorSaveEvent;
 			mFindResultDlg.onResultItemClick = this.OnSelectTreeViewNode;
 			mLockPanel.BringToFront();
@@ -57,7 +59,7 @@ namespace MyNote
 			{
 				mLockPanel.Visible = true;
 			}
-			mCheckTimer.Start();
+			mTimer.Start();
 		}
 		void LoadRuntimeData()
 		{
@@ -101,13 +103,69 @@ namespace MyNote
 			mRuntimeData.current_selected_node_uid = bkNode.NodeDocumentUID;
 			this.LoadNoteBookNoteDocument(bkNode);
 		}
-
-		/// <summary>
-		/// 创建笔记本
-		/// </summary>
-		/// <param name="sender"></param>
-		/// <param name="e"></param>
-		void OnCreateNoteBook(object sender, EventArgs e)
+		void OnNoteBookNetAsyncEvt(object sender, object book, bool download)
+		{
+			this.DoNoteBookNetAsync(book as NoteBook, download);
+		}
+		void DoNoteBookNetAsync(NoteBook notebook, bool download)
+		{
+			if (notebook == null) return;
+            // 清除了同步配置
+            if (string.IsNullOrEmpty(notebook.sync_uuid))
+			{
+				MessageBox.Show(this, "当前笔记本未设置网络同步信息", "提示");
+                return;
+            }
+			// 没有开启同步
+			if (!mRuntimeData.sync_server)
+			{
+				MessageBox.Show(this, "未打开同步开关", "提示");
+				return;
+			}
+			// 没有配置同步URL
+            if (string.IsNullOrEmpty(mRuntimeData.sync_url) || string.IsNullOrEmpty(mRuntimeData.sync_token))
+			{
+				MessageBox.Show(this, "请设置网络同步的地址和Token", "提示");
+				return;
+			}
+			// 同下载还是同步服务器			
+			Task.Run(async () =>
+			{
+				var sync_client = new NoteBookSync(mRuntimeData.sync_token, mRuntimeData.sync_url);
+				bool result = false;
+				if (download)
+				{
+					result = await sync_client.DownloadFromServer(notebook);
+				}else
+				{
+					result = await sync_client.UploadToServer(notebook);
+				}
+				// 执行完成关闭界面
+				this.Invoke(new Action(() =>
+				{
+					if(!result)
+					{
+						MessageBox.Show(this, "同步失败!", "提示");
+					}else
+					{
+                        MessageBox.Show(this, "同步完成!", "提示", MessageBoxButtons.OK);
+                        if (download)
+						{
+                            mNoteTree.AddNoteBook(notebook);
+						}
+					}
+					SyncLoading.HideLoading();
+				}));
+			});
+            // 打开loading界面，防止操作
+            SyncLoading.ShowLoading(download? "正在从服务器同步数据到本地..." : "正在同步数据到服务器...");
+        }
+        /// <summary>
+        /// 创建笔记本
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        void OnCreateNoteBook(object sender, EventArgs e)
 		{
 			SaveFileDialog dlg = new SaveFileDialog();
 			dlg.Filter =  string.Format("笔记本（*{0}）|*{0}", Const.NOTE_BOOK_EXT);
@@ -153,11 +211,26 @@ namespace MyNote
 			}
 		}
 		/// <summary>
-		/// 保存文档数据
+		/// 打开网络笔记本
 		/// </summary>
 		/// <param name="sender"></param>
 		/// <param name="e"></param>
-		void OnSaveNoteBookDocument(object sender, EventArgs e)
+        private void OnOpenCloudNoteBook(object sender, EventArgs e)
+        {
+			OpenCloudNoteBookDialog dlg = new OpenCloudNoteBookDialog();
+			if (dlg.ShowDialog() != DialogResult.OK) return;
+			NoteBook book = new NoteBook();
+			book.BookName = dlg.NoteBookName;
+			book.sync_uuid = dlg.CloudPath;
+			book.BookPath = Path.Combine(dlg.LocalPath, string.Format("{0}{1}", book.BookName, Const.NOTE_BOOK_EXT));
+			this.DoNoteBookNetAsync(book, true);
+        }
+        /// <summary>
+        /// 保存文档数据
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        void OnSaveNoteBookDocument(object sender, EventArgs e)
 		{
 			if(mCurrentNode == null) return;
 			this.SaveNoteBookNoteDocument(mCurrentNode);
@@ -213,38 +286,13 @@ namespace MyNote
 		
 		void SaveNoteBookNoteDocument(NoteBookNode bkNode)
 		{
-			string root_path;
-			string book_name;
-			if(!mNoteTree.GetCurrentNoteBookPath(out root_path, out book_name))
-			{
-				return;
-			}
 			if(!mNodeEditor.IsContentChange())
 			{
 				return;
 			}
-			string filename = string.Format("{0}{1}",bkNode.NodeDocumentUID, Const.NOTE_BOOK_NODE_EXT);
-			string fileRootpath = Path.Combine(root_path, book_name);
-			// 创建笔记本目录
-			if(!Directory.Exists(fileRootpath))
-			{
-				Directory.CreateDirectory(fileRootpath);
-			}
-			string filepath = Path.Combine(fileRootpath,filename);
 			string content = mNodeEditor.GetContent();
-			// 读取文件内容
-			using (FileStream fs = new FileStream(filepath, FileMode.Create))
-			{
-				UTF8Encoding con = new UTF8Encoding();
-				byte[] data = con.GetBytes(content);
-				// 需要加密
-				if(mNoteTree.CurrentBook.CryptFlag)
-				{
-					data = Utils.Encode(data, mNoteTree.CurrentBook.CryptKey);
-					fs.Write(Const.CRYPT_HEAD, 0, Const.CRYPT_HEAD.Length);
-				}
-				fs.Write(data, 0, data.Length);
-			}
+			// 保存内容
+			bkNode.Save(mNoteTree.CurrentBook, content);
 			// 更新内容保存
 			mNodeEditor.SetContentSaved();
 			bkNode.NodeModifyTime = DateTime.Now;
@@ -305,7 +353,7 @@ namespace MyNote
 			// 非用户行为关闭程序，则直接关闭程序
 			//if(e.CloseReason != CloseReason.UserClosing)
 			{
-				mCheckTimer.Stop();
+				mTimer.Stop();
 				//数据存储
 				this.SaveRuntimeData();
 				if(mCurrentNode != null)
@@ -474,6 +522,9 @@ namespace MyNote
 			mRuntimeData.auto_lock_time = dialog.AutoLockTime;
 			mRuntimeData.auto_lock_window = dialog.AutoLockWindow;
 			mRuntimeData.unlock_password = dialog.UnlockPassword;
+			mRuntimeData.sync_url = dialog.SyncServerUrl;
+			mRuntimeData.sync_token = dialog.SyncServerToken;
+			mRuntimeData.sync_server = dialog.SyncServer;
 		}
 		
 		void OnUnlockEvt(object sender, EventArgs e)
@@ -487,25 +538,40 @@ namespace MyNote
 			mLockPanel.Visible = false;
 		}
 		/// <summary>
-		/// 
+		/// 定时器每秒执行
 		/// </summary>
 		/// <param name="sender"></param>
 		/// <param name="e"></param>
-		void OnCheckLockTimer(object sender, EventArgs e)
+		void OnCheckTimer(object sender, EventArgs e)
 		{
-			if(!mRuntimeData.auto_lock_window) return;
-            if(mLockPanel.Visible) return;
-            if((DateTime.Now - _lastMsgDate).Minutes >= mRuntimeData.auto_lock_time)
-            {
-            	mLockPanel.Visible = true;
-            }
+			this.OnCheckLockTimer();    // 检测是否锁屏
 		}
 		/// <summary>
-		/// 锁定
+		/// 锁屏
 		/// </summary>
-		/// <param name="sender"></param>
-		/// <param name="e"></param>
-		void OnLockWindowEvt(object sender, EventArgs e)
+		void OnCheckLockTimer()
+		{
+            if (!mRuntimeData.auto_lock_window) return;
+            if (mLockPanel.Visible) return;
+            if ((DateTime.Now - _lastMsgDate).Minutes >= mRuntimeData.auto_lock_time)
+            {
+                mLockPanel.Visible = true;
+            }
+        }
+		/// <summary>
+		/// 同步
+		/// </summary>
+		void OnCheckSyncTimer()
+		{
+			if (!mRuntimeData.sync_server) return;
+			if (string.IsNullOrEmpty(mRuntimeData.sync_url)) return;
+		}
+        /// <summary>
+        /// 锁定
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        void OnLockWindowEvt(object sender, EventArgs e)
 		{
 			mLockPanel.Visible = true;
 		}
@@ -517,5 +583,6 @@ namespace MyNote
 				this.OnUnlockEvt(sender, e);
 			}
 		}
-	}
+        
+    }
 }

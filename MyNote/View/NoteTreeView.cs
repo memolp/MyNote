@@ -29,6 +29,12 @@ namespace MyNote.View
 		/// <param name="node"></param>
 		public delegate void TreeNodeSelectedHandler(object sender, object node);
 		/// <summary>
+		/// 笔记本设置网络同步事件
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="book"></param>
+		public delegate void NodeBookNetAsyncHandler(object sender, object book, bool download);
+		/// <summary>
 		/// 当前打开的笔记本
 		/// </summary>
 		NoteBook mCurrentBook = null;
@@ -49,9 +55,13 @@ namespace MyNote.View
 		/// </summary>
 		public TreeNodeSelectedHandler onNodeSelected;
 		/// <summary>
-		/// 构造 树形控件-带有工具栏
+		/// 笔记本网络同步事件
 		/// </summary>
-		public NoteTreeView()
+		public NodeBookNetAsyncHandler nodeBookNetAsync;
+        /// <summary>
+        /// 构造 树形控件-带有工具栏
+        /// </summary>
+        public NoteTreeView()
 		{
 			InitializeComponent();
 		}
@@ -68,50 +78,61 @@ namespace MyNote.View
 		
 		public void AddNoteBook(NoteBook book)
 		{
+			// 这里需要处理
 			if(mCurrentBook != null) 
 			{
 				MessageBox.Show("试用版本只支持打开一个笔记本", "提示");
 				return;
 			}
-			// 已经存在
-			if(mTabNoteData.ContainsKey(book.BookUID))
+            // 没有就创建TreeView并绑定数据
+            if (!mTabNoteData.TryGetValue(book.BookUID, out TreeView treeView))
 			{
-				return;
-			}
-			// 创建TreeView并绑定数据
-			TreeView treeView = new TreeView();
-			treeView.LabelEdit = true;
-			treeView.FullRowSelect = true;
-			treeView.Indent = 20;
-			treeView.Scrollable = true;
-			treeView.ShowLines = true;
-			treeView.ShowPlusMinus = true;
-			treeView.ShowRootLines = true;
-			treeView.ContextMenuStrip = mPopMenuBar;
-			treeView.BorderStyle = BorderStyle.None;
-			treeView.TabStop = false;
-			treeView.HideSelection = false;
-			// 添加事件
-			treeView.AfterSelect += this.OnAfterNodeSelect;
-			treeView.AfterLabelEdit += this.OnAfterLabelEdit;
-			
-			mCurrentBook = book;		// 当前的book
-			mNoteTreeView = treeView; //当前的TreeView
-			mNoteTreeView.BeginUpdate();
-			// 添加全部数据
-			foreach (var element in book.BookNotes) 
+                treeView = new TreeView();
+                treeView.LabelEdit = true;
+                treeView.FullRowSelect = true;
+                treeView.Indent = 20;
+                treeView.Scrollable = true;
+                treeView.ShowLines = true;
+                treeView.ShowPlusMinus = true;
+                treeView.ShowRootLines = true;
+                treeView.ContextMenuStrip = mPopMenuBar;
+                treeView.BorderStyle = BorderStyle.None;
+                treeView.TabStop = false;
+                treeView.HideSelection = false;
+                // 添加事件
+                treeView.AfterSelect += this.OnAfterNodeSelect;
+                treeView.AfterLabelEdit += this.OnAfterLabelEdit;
+                // 添加Tab页
+                TabPage page = new TabPage(book.BookName);
+				page.Tag = book.BookUID;
+				page.ToolTipText = book.BookPath;
+                page.Controls.Add(treeView);
+                treeView.Dock = DockStyle.Fill; //填充整个区域
+				treeView.Tag = book;
+                mTreeTabCtrl.TabPages.Add(page);
+                // 记录到列表中
+                mTabNoteData.Add(book.BookUID, treeView);
+            }
+			else
 			{
-				CreateTreeNodeWithNoteBookNode(element, treeView.Nodes, book.CurrentNodeUID);
-			}
-			mNoteTreeView.EndUpdate();
-			// 添加Tab页
-			TabPage page = new TabPage(book.BookName);
-			page.Controls.Add(treeView);
-			treeView.Dock = DockStyle.Fill;	//填充整个区域
-			mTreeTabCtrl.TabPages.Add(page);
-			// 记录到列表中
-			mTabNoteData.Add(book.BookUID, treeView);
+				treeView.Nodes.Clear();
+            }
+			this.UpdateNoteBook(book, treeView);
 		}
+		void UpdateNoteBook(NoteBook book, TreeView treeView)
+		{
+            mNoteNodes.Clear();
+            mCurrentBook = book;        // 当前的book
+            mNoteTreeView = treeView; //当前的TreeView
+			mNoteTreeView.Nodes.Clear();
+            mNoteTreeView.BeginUpdate();
+            // 添加全部数据
+            foreach (var element in book.BookNotes)
+            {
+                CreateTreeNodeWithNoteBookNode(element, treeView.Nodes, book.CurrentNodeUID);
+            }
+            mNoteTreeView.EndUpdate();
+        }
 		/// <summary>
 		/// 保存全部的笔记本
 		/// </summary>
@@ -122,11 +143,11 @@ namespace MyNote.View
 			if(mCurrentBook != null)
 				mCurrentBook.Save();
 		}
-		/// <summary>
-		/// 更新节点的状态记录
-		/// </summary>
-		/// <param name="nodes"></param>
-		void OnUpdateNodesState(TreeNodeCollection nodes)
+        /// <summary>
+        /// 更新节点的状态记录
+        /// </summary>
+        /// <param name="nodes"></param>
+        void OnUpdateNodesState(TreeNodeCollection nodes)
 		{
 			NoteBookNode bknode;
 			foreach(TreeNode elem in nodes)
@@ -296,8 +317,6 @@ namespace MyNote.View
 			node.Name = bkNode.NodeDocumentUID;
 			node.Text = bkNode.NodeName;
 			node.Item = bkNode;
-			if(bkNode.NodeExpanded)
-				node.Expand();
 			parent.Add(node);
 			// 将子列表也添加进去
 			if(bkNode.childrenList.Count > 0)
@@ -311,7 +330,9 @@ namespace MyNote.View
 			{
 				SelectedAndCheckNode(node);
 			}
-			return node;
+            if (bkNode.NodeExpanded)
+                node.Expand();
+            return node;
 		}
 		/// <summary>
 		/// 创建全部的节点数据
@@ -631,15 +652,22 @@ namespace MyNote.View
 			if(node == null) return;
 			node.BeginEdit();  //开启编辑
 		}
-		/// <summary>
-		/// Tab控件笔记本更换
-		/// </summary>
-		/// <param name="sender"></param>
-		/// <param name="e"></param>
-		void OnNoteBookChange(object sender, EventArgs e)
+        /// <summary>
+        /// Tab控件笔记本更换
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        void OnNoteBookChange(object sender, EventArgs e)
 		{
-			
-		}
+			string book_uid = (string)mTreeTabCtrl.SelectedTab.Tag;
+			if(!mTabNoteData.TryGetValue(book_uid, out TreeView treeView))
+			{
+				return;
+			}
+			NoteBook book = treeView.Tag as NoteBook;
+			if(book == null) return;
+			UpdateNoteBook(book, treeView);
+        }
 		#region 2022/02/28 加密设置
 		/// <summary>
 		/// 设置笔记本加密
@@ -650,8 +678,8 @@ namespace MyNote.View
 		{
 			if(mCurrentBook == null) return;
 			// 设置加密
-			NoteBookCryptDialog dialog = new NoteBookCryptDialog();
-			dialog.OnInitDialog(this.mCurrentBook.CryptFlag, this.mCurrentBook.CryptKey);
+			NoteBookSettingDialog dialog = new NoteBookSettingDialog();
+			dialog.OnInitDialog(this.mCurrentBook);
 			if(dialog.ShowDialog() == DialogResult.OK)
 			{
 				if(dialog.CryptFlag)
@@ -666,7 +694,8 @@ namespace MyNote.View
 					mCurrentBook.CryptFlag = dialog.CryptFlag;
 					this.OnNoteBookDecode(dialog.CryptKey);
 				}
-			}
+                this.mCurrentBook.sync_uuid = dialog.NoteBookNetUUID;
+            }
 		}
 		/// <summary>
 		/// 对全部笔记进行加密
@@ -771,6 +800,19 @@ namespace MyNote.View
 			mCurrentBook.CryptKey = key;
 			mCurrentBook.Save();
 		}
-	}
+
+        private void BtnCloudDownload_Click(object sender, EventArgs e)
+        {
+            if (mCurrentBook == null) return;
+			this.nodeBookNetAsync?.Invoke(this, mCurrentBook, true);
+            
+        }
+
+        private void BtnCloudUpload_Click(object sender, EventArgs e)
+        {
+            if (mCurrentBook == null) return;
+            this.nodeBookNetAsync?.Invoke(this, mCurrentBook, false);
+        }
+    }
 	#endregion
 }

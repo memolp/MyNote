@@ -37,6 +37,18 @@ namespace MyNote.View
 		/// 解锁密码
 		/// </summary>
 		public string UnlockPassword{set;get;}
+		/// <summary>
+		/// 是否开启服务器同步
+		/// </summary>
+		public bool SyncServer {set; get;}
+		/// <summary>
+		/// 服务器同步的URL地址
+		/// </summary>
+		public string SyncServerUrl {set; get;}
+		/// <summary>
+		/// 服务器同步的Token
+		/// </summary>
+		public string SyncServerToken { set; get;}
 		
 		public PreferenceDialog()
 		{
@@ -53,6 +65,9 @@ namespace MyNote.View
 			mOnSystemIcon.Checked = data.close_on_notify_icon;
 			mAutoLockCheck.Checked = data.auto_lock_window;
 			mLockTime.Value = data.auto_lock_time > 1? data.auto_lock_time : 1;
+			CheckServerSync.Checked = data.sync_server;
+			InputNetSeverUrl.Text = data.sync_url;
+			InputNetToken.Text = data.sync_token;
 			this.UnlockPassword = data.unlock_password;
 		}
 		
@@ -67,6 +82,9 @@ namespace MyNote.View
 			this.NotifyIcon = mOnSystemIcon.Checked;
 			this.AutoLockWindow = mAutoLockCheck.Checked;
 			this.AutoLockTime = mLockTime.Value;
+			this.SyncServer = CheckServerSync.Checked;
+			this.SyncServerUrl = InputNetSeverUrl.Text;
+			this.SyncServerToken = InputNetToken.Text;
 			this.DialogResult = DialogResult.OK;
 		}
 		/// <summary>
@@ -92,5 +110,5 @@ namespace MyNote.View
 				this.UnlockPassword = dlg.NewPassword;
 			}
 		}
-	}
+    }
 }

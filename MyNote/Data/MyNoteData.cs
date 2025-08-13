@@ -59,7 +59,22 @@ namespace MyNote.Data
 		/// </summary>
 		[OptionalFieldAttribute]
 		public string unlock_password = "";
-		
+		/// <summary>
+		/// 同步服务是否卡其
+		/// </summary>
+		[OptionalField]
+		public bool sync_server = false;
+		/// <summary>
+		/// 同步的服务器地址
+		/// </summary>
+		[OptionalField]
+		public string sync_url = string.Empty;
+		/// <summary>
+		/// 同步服务器的token
+		/// </summary>
+		[OptionalField]
+		public string sync_token = string.Empty;
+
 		public MyNoteData()
 		{
 		}

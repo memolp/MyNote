@@ -249,7 +249,16 @@ namespace MyNote.View
 		/// <param name="e"></param>
 		void OnForeColorClick(object sender, EventArgs e)
 		{
-			int fontcolor = (int)((mshtml.IHTMLDocument2)mWebBrowser.Document.DomDocument).queryCommandValue("ForeColor");
+
+			int fontcolor = 0x0;
+			try
+			{
+				fontcolor = (int)((mshtml.IHTMLDocument2)mWebBrowser.Document.DomDocument).queryCommandValue("ForeColor");
+			}
+			catch (Exception ex)
+			{
+
+			}
 			ColorDialog dialog = new ColorDialog();
             dialog.Color = Color.FromArgb(0xff, fontcolor & 0xff, (fontcolor >> 8) & 0xff, (fontcolor >> 16) & 0xff);
 

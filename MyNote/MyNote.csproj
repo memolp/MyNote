@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Build">
+<Project ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Build">
   <PropertyGroup>
     <ProjectGuid>{05A7F142-D0AF-4115-B868-B79E99AD3B6E}</ProjectGuid>
     <ProjectTypeGuids>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -8,7 +8,7 @@
     <OutputType>WinExe</OutputType>
     <RootNamespace>MyNote</RootNamespace>
     <AssemblyName>MyNote</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <TargetFrameworkProfile />
     <StartupObject>MyNote.Program</StartupObject>
@@ -51,6 +51,9 @@
     <Reference Include="CommonMark">
       <HintPath>CommonMark.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.Bcl.AsyncInterfaces, Version=9.0.0.8, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Bcl.AsyncInterfaces.9.0.8\lib\net462\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp">
       <RequiredTargetFramework>4.0</RequiredTargetFramework>
     </Reference>
@@ -58,6 +61,9 @@
       <HintPath>C:\Program Files %28x86%29\Microsoft.NET\Primary Interop Assemblies\Microsoft.mshtml.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Buffers, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Buffers.4.5.1\lib\net461\System.Buffers.dll</HintPath>
+    </Reference>
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
@@ -66,6 +72,32 @@
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
     <Reference Include="System.Drawing" />
+    <Reference Include="System.IO.Pipelines, Version=9.0.0.8, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.IO.Pipelines.9.0.8\lib\net462\System.IO.Pipelines.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Memory, Version=4.0.1.2, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Memory.4.5.5\lib\net461\System.Memory.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Numerics.Vectors, Version=4.1.4.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Numerics.Vectors.4.5.0\lib\net46\System.Numerics.Vectors.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.6.0.0\lib\net461\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Text.Encodings.Web, Version=9.0.0.8, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Text.Encodings.Web.9.0.8\lib\net462\System.Text.Encodings.Web.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Text.Json, Version=9.0.0.8, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Text.Json.9.0.8\lib\net462\System.Text.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Threading.Tasks.Extensions, Version=4.2.0.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Threading.Tasks.Extensions.4.5.4\lib\net461\System.Threading.Tasks.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.ValueTuple.4.5.0\lib\net47\System.ValueTuple.dll</HintPath>
+    </Reference>
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq">
@@ -73,65 +105,112 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CryptoHelper.cs" />
     <Compile Include="Data\Const.cs" />
     <Compile Include="Data\MyNoteData.cs" />
     <Compile Include="Data\NoteBook.cs" />
     <Compile Include="Data\NoteBookNode.cs" />
-    <Compile Include="MainForm.cs" />
+    <Compile Include="MainForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="MainForm.Designer.cs">
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="NoteBookSync.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="Utils.cs" />
-    <Compile Include="View\CaptureFrame.cs" />
+    <Compile Include="View\CaptureFrame.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="View\CaptureFrame.Designer.cs">
       <DependentUpon>CaptureFrame.cs</DependentUpon>
     </Compile>
-    <Compile Include="View\CodeDialog.cs" />
+    <Compile Include="View\CodeDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="View\CodeDialog.Designer.cs">
       <DependentUpon>CodeDialog.cs</DependentUpon>
     </Compile>
-    <Compile Include="View\FindResultDialog.cs" />
+    <Compile Include="View\FindResultDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="View\FindResultDialog.Designer.cs">
       <DependentUpon>FindResultDialog.cs</DependentUpon>
     </Compile>
-    <Compile Include="View\FindResultPanel.cs" />
+    <Compile Include="View\FindResultPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="View\FindResultPanel.Designer.cs">
       <DependentUpon>FindResultPanel.cs</DependentUpon>
     </Compile>
-    <Compile Include="View\InputPasswordDialog.cs" />
+    <Compile Include="View\InputPasswordDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="View\InputPasswordDialog.Designer.cs">
       <DependentUpon>InputPasswordDialog.cs</DependentUpon>
     </Compile>
-    <Compile Include="View\LockWindow.cs" />
+    <Compile Include="View\LockWindow.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="View\LockWindow.Designer.cs">
       <DependentUpon>LockWindow.cs</DependentUpon>
     </Compile>
-    <Compile Include="View\MarkDownInputDialog.cs" />
+    <Compile Include="View\MarkDownInputDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="View\MarkDownInputDialog.Designer.cs">
       <DependentUpon>MarkDownInputDialog.cs</DependentUpon>
     </Compile>
-    <Compile Include="View\NoteBookCryptDialog.cs" />
-    <Compile Include="View\NoteBookCryptDialog.Designer.cs">
-      <DependentUpon>NoteBookCryptDialog.cs</DependentUpon>
+    <Compile Include="View\NoteBookSettingDialog.cs">
+      <SubType>Form</SubType>
     </Compile>
-    <Compile Include="View\NoteEditor.cs" />
+    <Compile Include="View\NoteBookSettingDialog.Designer.cs">
+      <DependentUpon>NoteBookSettingDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\NoteEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="View\NoteEditor.Designer.cs">
       <DependentUpon>NoteEditor.cs</DependentUpon>
     </Compile>
-    <Compile Include="View\NoteTreeView.cs" />
+    <Compile Include="View\NoteTreeView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="View\NoteTreeView.Designer.cs">
       <DependentUpon>NoteTreeView.cs</DependentUpon>
     </Compile>
-    <Compile Include="View\PreferenceDialog.cs" />
+    <Compile Include="View\OpenCloudNoteBookDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\OpenCloudNoteBookDialog.Designer.cs">
+      <DependentUpon>OpenCloudNoteBookDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\PreferenceDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="View\PreferenceDialog.Designer.cs">
       <DependentUpon>PreferenceDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\SyncLoading.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\SyncLoading.Designer.cs">
+      <DependentUpon>SyncLoading.cs</DependentUpon>
     </Compile>
     <Compile Include="View\TreeNodeEx.cs" />
     <Compile Include="Win32Api.cs" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Include="View\CaptureFrame.resx">
       <DependentUpon>CaptureFrame.cs</DependentUpon>
     </EmbeddedResource>
@@ -153,20 +232,27 @@
     <EmbeddedResource Include="View\MarkDownInputDialog.resx">
       <DependentUpon>MarkDownInputDialog.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="View\NoteBookCryptDialog.resx">
-      <DependentUpon>NoteBookCryptDialog.cs</DependentUpon>
+    <EmbeddedResource Include="View\NoteBookSettingDialog.resx">
+      <DependentUpon>NoteBookSettingDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="View\NoteTreeView.resx">
       <DependentUpon>NoteTreeView.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="View\OpenCloudNoteBookDialog.resx">
+      <DependentUpon>OpenCloudNoteBookDialog.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="View\PreferenceDialog.resx">
       <DependentUpon>PreferenceDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\SyncLoading.resx">
+      <DependentUpon>SyncLoading.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="app.config" />
     <EmbeddedResource Include="note.html">
       <LogicalName>my_note_html</LogicalName>
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </EmbeddedResource>
+    <None Include="packages.config" />
     <None Include="prism.css">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -184,15 +270,22 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Data" />
-    <Folder Include="Resources" />
-    <Folder Include="View" />
+    <None Include="Resources\cloud-download.png" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ScreenCapture\ScreenCapture.csproj">
       <Project>{9786f3b5-866b-4b93-93a5-ac2379c92657}</Project>
       <Name>ScreenCapture</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\cloud.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\cloud-upload.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\setting.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
